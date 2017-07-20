@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Native View</title>
+
+	<link rel="stylesheet" type="text/css" href="./node_modules/angular-material/angular-material.css">
+	<link rel="stylesheet" type="text/css" href="styles/app.css">
+
+	<script type="text/javascript" src="./node_modules/angular/angular.js"></script>
+	<script type="text/javascript" src="./node_modules/angular-aria/angular-aria.js"></script>
+	<script type="text/javascript" src="./node_modules/angular-animate/angular-animate.js"></script>
+	<script type="text/javascript" src="./node_modules/angular-material/angular-material.js"></script>
+
+	<script>
+        var THREE = require('three');
+        var OrbitControls = require('../node_modules/three/examples/js/controls/OrbitControls.js').join
+        var EffectComposer = require('../node_modules/three/examples/js/postprocessing/EffectComposer.js').join
+        var RenderPass = require('../node_modules/three/examples/js/postprocessing/RenderPass.js').join
+        var MaskPass = require('../node_modules/three/examples/js/postprocessing/MaskPass.js').join
+        var ShaderPass = require('../node_modules/three/examples/js/postprocessing/ShaderPass.js').join
+        var StereoShader = require('../node_modules/three/examples/js/effects/StereoEffect.js').join
+        var CopyShader = require('../node_modules/three/examples/js/shaders/CopyShader.js').join
+        var STLLoader = require('../node_modules/three/examples/js/loaders/STLLoader.js').join
+
+	</script>
+
+
+	<!--Initial Setup-->
+	<script type="text/javascript" src="scripts/index.js"></script>
+
+	<!--View Controller-->
+	<script type="text/javascript" src="scripts/app/controller.js"></script>
+
+	<!--Material configs (for now)-->
+	<script type="text/javascript" src="scripts/app/config.js"></script>
+
+	<script src="scripts/components/computerVision/brf/libs/createjs/preloadjs-0.6.2.min.js"></script>
+	<script src="scripts/components/computerVision/brf/BRFv4Demo.js"></script>
+
+
+
+</head>
+<body>
+
+<script>
+
+	window.onload = brfv4Example.start();
+
+    const {Menu, MenuItem} = remote
+    const menu = new Menu()
+
+    menu.append(new MenuItem(
+        {
+            label: 'Settings',
+            submenu: [
+                {
+                    label: 'Settings',
+                    click: function () {
+                        ipcRenderer.send('toggle-prefs')
+                    }
+                }
+            ]
+        })
+    )
+    Menu.setApplicationMenu(menu)
+
+</script>
+
+
+<div ng-controller="ViewController as scope">
+
+
+	<div class="tracker" ng-show="native.headtracking.active" ng-class="{full:native.headtracking.fullscreen}">
+		<div class="tracking-wrapper">
+			<video id="_webcam" style="transform: scaleX(-1)"></video>
+			<canvas id="_imageData" style="opacity: 0"></canvas>
+			<canvas id="_faceSub"></canvas>
+			<canvas id="_t3d"></canvas>
+			<canvas id="_f3d"></canvas>
+			<canvas id="_drawing"></canvas>
+		</div>
+	</div>
+
+	<script src="scripts/components/scene/scene.js"></script>
+
+	<div class="debug" style="display: flex; width: 400px; flex-direction: column; position: fixed; bottom: 0; left:0;">
+		<span> {{ native }} </span>
+		<md-button ng-click="scope.reload()" style="position: fixed; bottom: 0; left: 0; z-index: 1000">Reload</md-button>
+	</div>
+</div>
+
+
+<div class="logo"></div>
+
+
+</body>
+</html>
