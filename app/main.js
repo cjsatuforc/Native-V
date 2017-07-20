@@ -45,7 +45,7 @@ app.on('ready', function() {
         frame: true,
         titleBarStyle: 'hidden-inset'
     });
-    mainWindow.loadURL('file://' + __dirname + "/index.html");
+    mainWindow.loadURL('file://' + __dirname + "/mono.html");
     mainWindow.on('closed', function() {
         mainWindow = null;
     });

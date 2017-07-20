@@ -57,8 +57,9 @@ native = {
         rotation: {
             x: -1,
             y: 0,
-            z: 0
-        }
+            z: 0,
+        },
+        rotate: true,
     },
     headtracking: {
         active: true,
@@ -85,5 +86,3 @@ native = {
         bundles: ["Autodesk Fusion", "Autodesk Inventor", "Autocad", "XFLOW"]
     }
 }
-
-

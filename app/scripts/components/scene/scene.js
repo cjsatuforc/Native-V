@@ -71,103 +71,19 @@ loader.load( 'assets/cat.stl', function ( geometry ) {
 
 // renderer
 renderer = new THREE.WebGLRenderer( { alpha: true } );
-renderer.setPixelRatio( window.devicePixelRatio );
+
 container.appendChild(renderer.domElement);
 
-composer = new THREE.EffectComposer( renderer );
-composer.addPass( new THREE.RenderPass( scene, camera ) );
+if (!mono){
+    renderer.setPixelRatio( window.devicePixelRatio ); //????
 
-var effect2 = new THREE.ShaderPass( getDistortionShaderDefinition() );
-composer.addPass( effect2 );
-effect2.renderToScreen = true;
-setupDistortionEffectAndGUI(effect2);
+    composer = new THREE.EffectComposer( renderer );
+    composer.addPass( new THREE.RenderPass( scene, camera ) );
 
-var distortion;
-
-function setupDistortionEffectAndGUI(effect2){
-
-    var distortionParameters = {
-        horizontalFOV:		54,
-        strength: 			0.5,
-        cylindricalRatio:	2,
-    };
-
-    distortion = distortionParameters;
-
-    updateDistortionEffect = function() {
-
-
-        var height = Math.tan(THREE.Math.degToRad(distortion.horizontalFOV) / 2) / camera.aspect;
-
-        camera.fov = Math.atan(height) * 2 * 180 / 3.1415926535;
-        camera.updateProjectionMatrix();
-
-
-        effect2.uniforms[ "strength" ].value = distortion.strength;
-        effect2.uniforms[ "height" ].value = height;
-        effect2.uniforms[ "aspectRatio" ].value = camera.aspect;
-        effect2.uniforms[ "cylindricalRatio" ].value = distortion.cylindricalRatio;
-        console.log(effect2.uniforms[ "cylindricalRatio" ].value)
-
-    };
-
-    updateDistortionEffect();
+    effect = new THREE.StereoEffect( renderer );
+    effect.setSize( window.innerWidth, window.innerHeight );
 }
 
-function getDistortionShaderDefinition(){
-    return {
-
-        uniforms: {
-            "tDiffuse": 		{ type: "t", value: null },
-            "strength": 		{ type: "f", value: 0 },
-            "height": 			{ type: "f", value: 1 },
-            "aspectRatio":		{ type: "f", value: 1 },
-            "cylindricalRatio": { type: "f", value: 1 }
-        },
-
-        vertexShader: [
-            "uniform float strength;",          // s: 0 = perspective, 1 = stereographic
-            "uniform float height;",            // h: tan(verticalFOVInRadians / 2)
-            "uniform float aspectRatio;",       // a: screenWidth / screenHeight
-            "uniform float cylindricalRatio;",  // c: cylindrical distortion ratio. 1 = spherical
-
-            "varying vec3 vUV;",                // output to interpolate over screen
-            "varying vec2 vUVDot;",             // output to interpolate over screen
-
-            "void main() {",
-            "gl_Position = projectionMatrix * (modelViewMatrix * vec4(position, 1.0));",
-
-            "float scaledHeight = strength * height;",
-            "float cylAspectRatio = aspectRatio * cylindricalRatio;",
-            "float aspectDiagSq = aspectRatio * aspectRatio + 1.0;",
-            "float diagSq = scaledHeight * scaledHeight * aspectDiagSq;",
-            "vec2 signedUV = (2.0 * uv + vec2(-1.0, -1.0));",
-
-            "float z = 0.5 * sqrt(diagSq + 1.0) + 0.5;",
-            "float ny = (z - 1.0) / (cylAspectRatio * cylAspectRatio + 1.0);",
-
-            "vUVDot = sqrt(ny) * vec2(cylAspectRatio, 1.0) * signedUV;",
-            "vUV = vec3(0.5, 0.5, 1.0) * z + vec3(-0.5, -0.5, 0.0);",
-            "vUV.xy += uv;",
-            "}"
-        ].join("\n"),
-
-        fragmentShader: [
-            "uniform sampler2D tDiffuse;",      // sampler of rendered scene�s render target
-            "varying vec3 vUV;",                // interpolated vertex output data
-            "varying vec2 vUVDot;",             // interpolated vertex output data
-
-            "void main() {",
-            "vec3 uv = dot(vUVDot, vUVDot) * vec3(-0.5, -0.5, -1.0) + vUV;",
-            "gl_FragColor = texture2DProj(tDiffuse, uv);",
-            "}"
-        ].join("\n")
-
-    };
-}
-
-effect = new THREE.StereoEffect( renderer );
-effect.setSize( window.innerWidth, window.innerHeight );
 
 window.addEventListener( 'resize', onWindowResize, false );
 
@@ -201,11 +117,12 @@ camera.flighAround = false;
 
 
 function onWindowResize(){
-    windowHalfX = window.innerWidth / 2;
-    windowHalfY = window.innerHeight / 2;
+
+        windowHalfX = window.innerWidth / 2;
+        windowHalfY = window.innerHeight / 2;
+        effect.setSize( window.innerWidth, window.innerHeight );
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    effect.setSize( window.innerWidth, window.innerHeight );
 }
 
 
@@ -222,13 +139,18 @@ function animate(){
 function render(){
 
 
-    //- if (camera.flighAround){
-    //- object.rotation.y=r*Math.sin(timer);
-    //- }
+    var timer=Date.now() * 0.000001;
+    var r=150;
+    // var faceData = faceData;
+    var object = scene.getObjectByName("model");
+    object.rotation.z=r*Math.sin(timer);
 
     if (camera.lookAtObj) {
         camera.lookAt(scene.position);
     }
-    effect.render( scene, camera );
-    // renderer.render(scene, camera);
+    if (!mono){
+        effect.render( scene, camera );
+    } else {
+        renderer.render(scene, camera);
+    }
 }
