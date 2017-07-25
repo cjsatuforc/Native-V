@@ -44,8 +44,6 @@
 
 <script>
 
-	var mono = false;
-
 	window.onload = brfv4Example.start();
 
     const {Menu, MenuItem} = remote
@@ -86,8 +84,11 @@
 	<script src="scripts/components/scene/scene.js"></script>
 
 	<div class="debug" style="display: flex; width: 400px; flex-direction: column; position: fixed; bottom: 0; left:0;">
-		<span> {{ native }} </span>
-		<md-button ng-click="scope.reload()" style="position: fixed; bottom: 0; left: 0; z-index: 1000">Reload</md-button>
+		<!-- <span> {{ native }} </span> -->
+		<span> {{native.camera.stereo}} </span>
+		<span> {{native.headtracking}} </span>
+		<span> {{native.headtracking.fullscreen}} </span>
+		<md-button ng-click="scope.reload()" style="z-index: 1000">Reload</md-button>
 	</div>
 </div>
 

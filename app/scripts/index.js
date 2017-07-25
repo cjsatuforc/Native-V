@@ -15,38 +15,24 @@ function boot() {
 
 document.addEventListener('DOMContentLoaded', boot);
 
-
 //creating empty set of objects
 var native;
-
-camera = {
-    position: {
-        x: 0,
-        y: 0,
-        z: 150
-    },
-    rotation: {
-        x: 0,
-        y: 0,
-        z: 0
-    },
-    lookAtObj: true
-}
-
+var camera;
 
 native = {
     camera: {
         position: {
             x: 0,
             y: 0,
-            z: 140
+            z: 190
         },
         rotation: {
             x: 0,
             y: 0,
             z: 0
         },
-        lookAtObj: true
+        lookAtObj: true,
+        stereo: true,
     },
     model: {
         position: {
@@ -86,3 +72,7 @@ native = {
         bundles: ["Autodesk Fusion", "Autodesk Inventor", "Autocad", "XFLOW"]
     }
 }
+
+ipcRenderer.on('update-native', function(event, arg) {
+    native = arg;
+});

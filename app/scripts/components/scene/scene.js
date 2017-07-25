@@ -74,7 +74,7 @@ renderer = new THREE.WebGLRenderer( { alpha: true } );
 
 container.appendChild(renderer.domElement);
 
-if (!mono){
+if (camera.stereo){
     renderer.setPixelRatio( window.devicePixelRatio ); //????
 
     composer = new THREE.EffectComposer( renderer );
@@ -121,8 +121,8 @@ function onWindowResize(){
         windowHalfX = window.innerWidth / 2;
         windowHalfY = window.innerHeight / 2;
         effect.setSize( window.innerWidth, window.innerHeight );
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
 }
 
 
@@ -138,7 +138,6 @@ function animate(){
 
 function render(){
 
-
     var timer=Date.now() * 0.000001;
     var r=150;
     // var faceData = faceData;
@@ -148,9 +147,13 @@ function render(){
     if (camera.lookAtObj) {
         camera.lookAt(scene.position);
     }
-    if (!mono){
+    if (camera.stereo){
         effect.render( scene, camera );
+        scene.needsUpdate = true;
+        camera.needsUpdate = true;
     } else {
         renderer.render(scene, camera);
+        scene.needsUpdate = true;
+        camera.needsUpdate = true;
     }
 }

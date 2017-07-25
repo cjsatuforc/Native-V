@@ -9,14 +9,11 @@ ipcRenderer.on('update-camera', function(event, arg) {
     camera.rotation.z = arg.rotation.z;
     camera.lookAtObj = arg.lookAtObj;
 });
+
 //Recieve updted scope
 ipcRenderer.on('update-native', function(event, arg) {
     native = arg;
 });
-
-
-var native = native;
-
 
 (function(){
     angular
@@ -38,9 +35,7 @@ var native = native;
         ipcRenderer.on('update-camera', function(event, arg) {
             $scope.native.camera = arg;
             $scope.native.camera.rotation.x = camera.rotation.x;
-            // $scope.$apply();
         });
-
 
         //sending scope to ipcMain
         $scope.sendNative = function () {
@@ -57,7 +52,15 @@ var native = native;
         //sending CAMERA scope to ipcMain
         $scope.sendCamera = function () {
             ipcRenderer.send('send-camera', native.camera);
+        }
 
+        $scope.toggleStereo = function (bool) {
+            if (bool == true){
+                console.log(native.camera.stereo)
+            } else{
+                console.log(native.camera.stereo)
+            }
+            $scope.sendNative();
         }
 
         $scope.resetCamera = function () {
@@ -68,10 +71,8 @@ var native = native;
         $scope.reloadPage = function () {
             location.reload();
         }
-
         $scope.sendNative();
         $scope.sendCamera();
-
     }
 
 })();
@@ -107,7 +108,7 @@ function getFace(facos){
     native.headtracking.head.rotation.y = data.rotationY;
     native.headtracking.head.rotation.z = data.rotationZ;
     native.headtracking.head.scale = data.scale;
-    ipcRenderer.send('send-native', native);
+    // ipcRenderer.send('send-native', native);
 }
 
 function getSmile(smileFactor){
