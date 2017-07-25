@@ -54,23 +54,16 @@ ipcRenderer.on('update-native', function(event, arg) {
             ipcRenderer.send('send-camera', native.camera);
         }
 
-        $scope.toggleStereo = function (bool) {
-            if (bool == true){
-                console.log(native.camera.stereo)
-            } else{
-                console.log(native.camera.stereo)
-            }
-            $scope.sendNative();
-        }
-
         $scope.resetCamera = function () {
             console.log('NADO SDELAT')
             ipcRenderer.send('send-camera', native.camera);
         }
 
+
         $scope.reloadPage = function () {
             location.reload();
         }
+
         $scope.sendNative();
         $scope.sendCamera();
     }

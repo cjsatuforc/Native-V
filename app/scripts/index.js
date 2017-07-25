@@ -10,10 +10,11 @@ function boot() {
     angular.bootstrap(document, ['app'], {
         strictDi: true
     });
-
 }
 
 document.addEventListener('DOMContentLoaded', boot);
+
+var localstorage = window.localStorage;
 
 //creating empty set of objects
 var native;
@@ -32,7 +33,7 @@ native = {
             z: 0
         },
         lookAtObj: true,
-        stereo: true,
+        stereo: false,
     },
     model: {
         position: {
@@ -70,9 +71,20 @@ native = {
     software: {
         selected: "Autodesk Fusion",
         bundles: ["Autodesk Fusion", "Autodesk Inventor", "Autocad", "XFLOW"]
-    }
+    },
+    debuger: true
+}
+
+if (localstorage.native === undefined || localstorage.native === null || localstorage.native.length === 0){
+    var native = native;
+    localstorage.setItem('native', JSON.stringify(native));
+} else {
+    var native = JSON.parse(localStorage.getItem("native"));
 }
 
 ipcRenderer.on('update-native', function(event, arg) {
     native = arg;
+    var localstorage = window.localStorage;
+    localStorage.clear();
+    localstorage.setItem('native', JSON.stringify(native));
 });

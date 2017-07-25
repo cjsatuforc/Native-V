@@ -8,16 +8,19 @@ const os = require('os');
 var path = require('path')
 var fs = require('fs');
 
-
 //Menubar
 var menubar = require('menubar')
 var mb = menubar({
-    index: 'file://' + __dirname + '/settings.html'
+    index: 'file://' + __dirname + '/settings.html',
+    icon:  'file://' + __dirname + '/assets/IconTemplate.png',
+    tooltip: 'Native',
+    width: 250,
+    height: 400,
+    showDockIcon: true
 })
 
 mb.on('ready', function ready () {
 })
-
 
 
 const logger = require('winston');
@@ -50,6 +53,21 @@ app.on('ready', function() {
         mainWindow = null;
     });
     mainWindow.openDevTools();
+
+    // mainWindow.webContents.once("loaded", function () {
+    //     var http = require("http");
+    //     var crypto = require("crypto");
+    //     var server = http.createServer(function (req, res) {
+    //         var port = crypto.randomBytes(16).toString("hex");
+    //         ipcMain.once(port, function (ev, status, head, body) {
+    //             res.writeHead(status, head);
+    //             res.end(body);
+    //         });
+    //         mainWindow.webContents.send("request", req, port);
+    //     });
+    //     server.listen(8000);
+    //     console.log("http://localhost:8000/");
+    // });
 
 
     var prefsWindow = new BrowserWindow({

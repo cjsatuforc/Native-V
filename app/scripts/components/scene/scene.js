@@ -1,4 +1,4 @@
-var container, neck, scene, renderer, composer, effect;
+var container, neck, scene, renderer, composer, stereorender;
 var camera;
 var object;
 var updateDistortionEffect;
@@ -69,23 +69,9 @@ loader.load( 'assets/cat.stl', function ( geometry ) {
 } );
 
 
-// renderer
-renderer = new THREE.WebGLRenderer( { alpha: true } );
-
-container.appendChild(renderer.domElement);
-
-if (camera.stereo){
-    renderer.setPixelRatio( window.devicePixelRatio ); //????
-
-    composer = new THREE.EffectComposer( renderer );
-    composer.addPass( new THREE.RenderPass( scene, camera ) );
-
-    effect = new THREE.StereoEffect( renderer );
-    effect.setSize( window.innerWidth, window.innerHeight );
-}
 
 
-window.addEventListener( 'resize', onWindowResize, false );
+window.addEventListener( 'resize', viewResize, false );
 
 
 var boxWidth = 90;
@@ -113,28 +99,54 @@ function onTextureLoaded(texture) {
 
 neck = new THREE.Object3D();
 
-camera.flighAround = false;
 
 
-function onWindowResize(){
+function viewResize(){
 
         windowHalfX = window.innerWidth / 2;
         windowHalfY = window.innerHeight / 2;
-        effect.setSize( window.innerWidth, window.innerHeight );
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        stereorender.setSize( window.innerWidth, window.innerHeight );
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
 }
 
 
-//getting init parms
-// cameraInit();
+setRenderer();
+
+function setRenderer(){
+
+        renderer = new THREE.WebGLRenderer( { alpha: true } );
+        renderer.setPixelRatio( window.devicePixelRatio );
+
+        stereorender = new THREE.StereoEffect( renderer );
+        stereorender.setSize( window.innerWidth, window.innerHeight );
+
+        composer = new THREE.EffectComposer( renderer );
+        composer.addPass( new THREE.RenderPass( scene, camera ) );
+
+
+        container.appendChild(renderer.domElement);
+
+        console.log('neolo!');
+    if (native.camera.stereo){
+        console.log('olo!');
+    };
+
+//     var renderer = new THREE.WebGLRenderer();
+// renderer.setSize( width,height);
+// document.body.appendChild( renderer.domElement );
+
+    viewResize();
+}
+
+
 animate();
 
 function animate(){
     requestAnimationFrame(animate);
     render();
 }
-
 
 function render(){
 
@@ -147,13 +159,10 @@ function render(){
     if (camera.lookAtObj) {
         camera.lookAt(scene.position);
     }
-    if (camera.stereo){
-        effect.render( scene, camera );
-        scene.needsUpdate = true;
-        camera.needsUpdate = true;
+
+    if (native.camera.stereo){
+        stereorender.render( scene, camera);
     } else {
-        renderer.render(scene, camera);
-        scene.needsUpdate = true;
-        camera.needsUpdate = true;
+       renderer.render(scene, camera);
     }
 }

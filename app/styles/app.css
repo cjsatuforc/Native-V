@@ -8,8 +8,33 @@ html, body {
     color: white !important;
     overflow: hidden;
     -webkit-font-smoothing: antialiased;
-
 }
+
+@font-face {
+  font-family: 'Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url("../assets/MaterialIcons.woff") format('woff');
+}
+
+.icon {
+  font-family: 'Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
+}
+
 
 .content-container {
 	margin-top: 20px;
@@ -65,6 +90,7 @@ body.settings .logo{
     right: 0;
     top: 15px;
     margin: auto;
+    z-index: 10000;
 }
 
 body{
@@ -78,7 +104,19 @@ body.settings header{
     left: 0;
     width: 100%;
     height: 60px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
     background: black;
+
+}
+
+body.settings canvas{
+    position: fixed;
+    width: 100vh;
+    height: 200px;
+    bottom: 0;
+    z-index: -10;
 }
 
 md-slider-container{
@@ -93,10 +131,29 @@ canvas{
 }
 
 md-tabs-content-wrapper{
-
 }
 
+header{
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: flex-end;
+}
 
+.md-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header button{
+    z-index: 10;
+}
 
 
 .logo{
@@ -160,7 +217,6 @@ video, canvas{
     opacity: 0.4;
     -webkit-filter: saturate(10%);
 }
-
 
 .debug{
     z-index: 100;
