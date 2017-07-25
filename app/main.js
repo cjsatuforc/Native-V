@@ -9,14 +9,14 @@ var path = require('path')
 var fs = require('fs');
 
 
-// //Menubar
-// var menubar = require('menubar')
-// var mb = menubar({
-//     index: 'file://' + __dirname + '/settings.html'
-// })
-//
-// mb.on('ready', function ready () {
-// })
+//Menubar
+var menubar = require('menubar')
+var mb = menubar({
+    index: 'file://' + __dirname + '/settings.html'
+})
+
+mb.on('ready', function ready () {
+})
 
 
 
@@ -45,7 +45,7 @@ app.on('ready', function() {
         frame: true,
         titleBarStyle: 'hidden-inset'
     });
-    mainWindow.loadURL('file://' + __dirname + "/mono.html");
+    mainWindow.loadURL('file://' + __dirname + "/index.html");
     mainWindow.on('closed', function() {
         mainWindow = null;
     });
@@ -71,7 +71,7 @@ app.on('ready', function() {
     // SetVibrancy(mainWindow, 6)
 
     prefsWindow.loadURL('file://' + __dirname + '/settings.html');
-    prefsWindow.show();
+    // prefsWindow.show();
     prefsWindow.openDevTools();
 
     require('./scripts/components/menu/mainmenu');

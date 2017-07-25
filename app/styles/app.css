@@ -4,7 +4,7 @@ html, body {
   height:100%;
   margin: 0px;
   padding: 0px;
-    background: rgba(0,0,0,0.1) !important;
+    background: rgba(0,0,0,0.4) !important;
     color: white !important;
     overflow: hidden;
     -webkit-font-smoothing: antialiased;
