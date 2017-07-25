@@ -45,25 +45,48 @@ neck.rotation._x = 200;  // X second
 // object
 var loader = new THREE.STLLoader();
 
-loader.load( 'assets/cat.stl', function ( geometry ) {
+// //CAT
+// loader.load( 'assets/cat.stl', function ( geometry ) {
+//     var material=new THREE.MeshNormalMaterial({
+//         linewidth: 0.01,
+//         wireframe: true,
+//         transparent: true,
+//         opacity: 1,
+//     });
+//     var mesh=new THREE.Mesh(geometry, material);
+//     mesh.name="model"
+//     mesh.scale.set(0.7, 0.7, 0.7);
+//     mesh.translateY(3)
+//     mesh.translateX(0)
+//     mesh.translateZ(0)
+//
+//     mesh.rotateX(-1.3)
+//     mesh.rotateZ(1.0)
+//
+//     mesh.material.needsUpdate = true;
+//     //MODEL HERE
+//     scene.add(mesh);
+// } );
+
+//Glass
+loader.load( 'assets/native.stl', function ( geometry ) {
     var material=new THREE.MeshNormalMaterial({
-        linewidth: 0.01,
+        linewidth: 0.005,
         wireframe: true,
         transparent: true,
-        opacity: 1,
+        opacity: 0.7,
     });
     var mesh=new THREE.Mesh(geometry, material);
     mesh.name="model"
-    mesh.scale.set(0.7, 0.7, 0.7);
-    mesh.translateY(3)
+    mesh.scale.set(0.3, 0.3, 0.3);
+    mesh.translateY(-5)
     mesh.translateX(0)
     mesh.translateZ(0)
 
-    mesh.rotateX(-1.3)
-    mesh.rotateZ(1.0)
+    mesh.rotateX(0)
+    mesh.rotateZ(0)
 
     mesh.material.needsUpdate = true;
-
     //MODEL HERE
     scene.add(mesh);
 } );
@@ -88,7 +111,7 @@ function onTextureLoaded(texture) {
         map: texture,
         transparent: true,
         opacity: 0.4,
-        color: 0x01BE00,
+        color: 0x0B5394,
         side: THREE.BackSide
     });
 
@@ -110,7 +133,6 @@ function viewResize(){
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
 }
-
 
 setRenderer();
 
@@ -154,7 +176,7 @@ function render(){
     var r=150;
     // var faceData = faceData;
     var object = scene.getObjectByName("model");
-    object.rotation.z=r*Math.sin(timer);
+    object.rotation.y=r*Math.sin(timer);
 
     if (camera.lookAtObj) {
         camera.lookAt(scene.position);

@@ -10,7 +10,16 @@ function boot() {
     angular.bootstrap(document, ['app'], {
         strictDi: true
     });
+
+
 }
+
+var interval = setInterval(function() {
+    if(document.readyState === 'complete') {
+        clearInterval(interval);
+        document.body.className = "loaded";
+    }
+}, 100);
 
 document.addEventListener('DOMContentLoaded', boot);
 
@@ -23,9 +32,9 @@ var camera;
 native = {
     camera: {
         position: {
-            x: 0,
-            y: 0,
-            z: 190
+            x: -93,
+            y: 5,
+            z: 160
         },
         rotation: {
             x: 0,

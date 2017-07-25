@@ -40,21 +40,15 @@ app.on('ready', function() {
 
     logger.debug("Starting application");
 
-    // var mainWindow = new BrowserWindow({
-    //     width: 950,
-    //     height: 550,
-    //     toolbar: true,
-    //     title: "Native",
-    //     transparent: true,
-    //     frame: true,
-    //     titleBarStyle: 'hidden-inset',
-    // });
-
     var mainWindow = new BrowserWindow({
-        titleBarStyle: 'hidden',
-        transparent:   true,
-        hasShadow:     true,
-        vibrancy:      'dark'
+        width: 950,
+        height: 550,
+        toolbar: true,
+        title: "Native",
+        transparent: true,
+        frame: true,
+        titleBarStyle: 'hidden-inset',
+        vibrancy: 'dark'
     });
 
 
@@ -62,8 +56,6 @@ app.on('ready', function() {
     mainWindow.on('closed', function() {
         mainWindow = null;
     });
-
-    // electronVibrancy.SetVibrancy(mainWindow, 0);
 
     mainWindow.openDevTools();
 
@@ -92,13 +84,15 @@ app.on('ready', function() {
         titleBarStyle: 'hidden-inset',
         toolbar: true,
         x: 100,
-        y: 150
+        y: 150,
+        vibrancy: 'dark'
     })
 
 
 
+
     prefsWindow.loadURL('file://' + __dirname + '/settings.html');
-    // prefsWindow.show();
+    prefsWindow.show();
     prefsWindow.openDevTools();
 
     require('./scripts/components/menu/mainmenu');

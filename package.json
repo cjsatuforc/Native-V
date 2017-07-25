@@ -30,6 +30,7 @@
   "author": "Alexander Turin",
   "devDependencies": {
     "copyfiles": "~1.0.0",
+    "electron": "^1.6.11",
     "electron-builder": "^5.35.0",
     "electron-packager": "^8.7.2",
     "electron-prebuilt": "~1.2.X",
@@ -44,7 +45,7 @@
     "dmg": {
       "title": "Native View",
       "background": "build/background.png",
-      "icon": "build/icon.icns",
+      "icon": "./app/assets/icon.ico",
       "icon-size": 128,
       "contents": [
         {
