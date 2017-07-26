@@ -28,35 +28,44 @@ var localstorage = window.localStorage;
 //creating empty set of objects
 var native;
 var camera;
+var models;
 
 native = {
     camera: {
         position: {
             x: -93,
             y: 5,
-            z: 160
+            z: 160,
         },
         rotation: {
             x: 0,
             y: 0,
-            z: 0
+            z: 0,
         },
         lookAtObj: true,
         stereo: false,
     },
     model: {
-        position: {
-            x: 0,
-            y: 0,
-            z: 0
-        },
-        rotation: {
-            x: -1,
-            y: 0,
-            z: 0,
-        },
+        file: 'assets/native.stl',
+        scale: 0.3,
+        rotation: [0,0,0],
+        position: [0, 0, 0],
         rotate: true,
     },
+    models: [
+        {
+            file: 'assets/Shelby.stl',
+            scale: 0.5,
+            rotation: [0,0,0],
+            position: [0, 0, 0],
+        },
+        {
+            file: 'assets/native.stl',
+            scale: 0.3,
+            rotation: [0, 0, 0],
+            position: [-5, 0, 0],
+        },
+    ],
     headtracking: {
         active: true,
         headtracking: false,
@@ -81,15 +90,20 @@ native = {
         selected: "Autodesk Fusion",
         bundles: ["Autodesk Fusion", "Autodesk Inventor", "Autocad", "XFLOW"]
     },
-    debuger: true
+    debuger: true,
+    laser: false
 }
 
+
+
+// Uncoment for prod
 if (localstorage.native === undefined || localstorage.native === null || localstorage.native.length === 0){
     var native = native;
     localstorage.setItem('native', JSON.stringify(native));
 } else {
     var native = JSON.parse(localStorage.getItem("native"));
 }
+
 
 ipcRenderer.on('update-native', function(event, arg) {
     native = arg;

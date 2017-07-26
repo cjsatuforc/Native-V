@@ -15,6 +15,7 @@ ipcRenderer.on('update-native', function(event, arg) {
     native = arg;
 });
 
+
 (function(){
     angular
         .module('app', ['ngMaterial', 'ngAnimate'])
@@ -34,7 +35,6 @@ ipcRenderer.on('update-native', function(event, arg) {
         //updatescope of mainWindow
         ipcRenderer.on('update-camera', function(event, arg) {
             $scope.native.camera = arg;
-            $scope.native.camera.rotation.x = camera.rotation.x;
         });
 
         //sending scope to ipcMain
@@ -54,21 +54,32 @@ ipcRenderer.on('update-native', function(event, arg) {
             ipcRenderer.send('send-camera', native.camera);
         }
 
-        $scope.resetCamera = function () {
-            console.log('NADO SDELAT')
-            ipcRenderer.send('send-camera', native.camera);
+        $scope.sendModel = function () {
+            ipcRenderer.send('send-model', native.model);
         }
 
+        // $scope.resetCamera = function () {
+        //     console.log('NADO SDELAT')
+        //     ipcRenderer.send('send-camera', native.camera);
+        // }
+
+        $scope.save = function(){
+            localstorage.setItem('native', JSON.stringify(native));
+        }
 
         $scope.reloadPage = function () {
             location.reload();
         }
 
+        $scope.updateModel = function(model){
+            loadModel(model.file, model.scale, model.position, model.rotation);
+        }
+
         $scope.sendNative();
         $scope.sendCamera();
     }
-
 })();
+
 
 function toggleHeadtracking(){
     if (native.headtracking.active) {
@@ -81,17 +92,6 @@ function toggleHeadtracking(){
     }
 }
 
-
-
-// ipcRenderer.on('send-headtracking', function(event, arg) {
-//     var headtracking = headtracking;
-//     if (headtracking.active) {
-//         brfv4Example.start();
-//     } else {
-//         window.onload = brfv4Example.stop;
-//     }
-//     console.log(headtracking);
-// });
 
 function getFace(facos){
     data = facos[0];

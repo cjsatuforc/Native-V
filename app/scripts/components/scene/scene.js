@@ -27,13 +27,16 @@ var lineMaterial =  new THREE.LineDashedMaterial( {
     gapSize: 10,
 });
 
-var lineGeometry = new THREE.Geometry();
-lineGeometry.dynamic = true;
-lineGeometry.verticesNeedUpdate = true;
-lineGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
-lineGeometry.vertices.push(new THREE.Vector3(100, 200, 900));
-var line = new THREE.Line(lineGeometry, lineMaterial);
-scene.add(line);
+
+if (native.laser){
+    var lineGeometry = new THREE.Geometry();
+    lineGeometry.dynamic = true;
+    lineGeometry.verticesNeedUpdate = true;
+    lineGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
+    lineGeometry.vertices.push(new THREE.Vector3(100, 200, 900));
+    var line = new THREE.Line(lineGeometry, lineMaterial);
+    scene.add(line);
+}
 
 
 neck.add(camera);
@@ -45,52 +48,53 @@ neck.rotation._x = 200;  // X second
 // object
 var loader = new THREE.STLLoader();
 
-// //CAT
-// loader.load( 'assets/cat.stl', function ( geometry ) {
-//     var material=new THREE.MeshNormalMaterial({
-//         linewidth: 0.01,
-//         wireframe: true,
-//         transparent: true,
-//         opacity: 1,
-//     });
-//     var mesh=new THREE.Mesh(geometry, material);
-//     mesh.name="model"
-//     mesh.scale.set(0.7, 0.7, 0.7);
-//     mesh.translateY(3)
-//     mesh.translateX(0)
-//     mesh.translateZ(0)
-//
-//     mesh.rotateX(-1.3)
-//     mesh.rotateZ(1.0)
-//
-//     mesh.material.needsUpdate = true;
-//     //MODEL HERE
-//     scene.add(mesh);
-// } );
-
-//Glass
 loader.load( 'assets/native.stl', function ( geometry ) {
     var material=new THREE.MeshNormalMaterial({
-        linewidth: 0.005,
+        linewidth: 0.01,
         wireframe: true,
         transparent: true,
-        opacity: 0.7,
+        opacity: 1,
     });
     var mesh=new THREE.Mesh(geometry, material);
     mesh.name="model"
     mesh.scale.set(0.3, 0.3, 0.3);
-    mesh.translateY(-5)
+    mesh.translateY(-1.4)
     mesh.translateX(0)
     mesh.translateZ(0)
-
     mesh.rotateX(0)
     mesh.rotateZ(0)
 
     mesh.material.needsUpdate = true;
-    //MODEL HERE
     scene.add(mesh);
 } );
 
+ipcRenderer.on('update-model', function(event, arg) {
+    console.log(arg);
+});
+
+// loadModel(native.model.file, native.model.scale, native.model.position, native.model.rotation);
+//
+// function loadModel(file, scale, position, rotation){
+//     loader.load( file, function ( geometry ) {
+//         var material=new THREE.MeshNormalMaterial({
+//             linewidth: 0.005,
+//             wireframe: true,
+//             transparent: true,
+//             opacity: 0.7,
+//         });
+//         var mesh=new THREE.Mesh(geometry, material);
+//         mesh.name="model"
+//         mesh.scale.set(scale, scale, scale);
+//         mesh.translateX(position[0])
+//         mesh.translateY(position[1])
+//         mesh.translateZ(position[2])
+//         mesh.rotateX(rotation[0])
+//         mesh.rotateY(rotation[1])
+//         mesh.rotateZ(rotation[2])
+//         mesh.material.needsUpdate = true;
+//         scene.add(mesh);
+//     });
+// }
 
 
 
@@ -150,9 +154,7 @@ function setRenderer(){
 
         container.appendChild(renderer.domElement);
 
-        console.log('neolo!');
     if (native.camera.stereo){
-        console.log('olo!');
     };
 
 //     var renderer = new THREE.WebGLRenderer();

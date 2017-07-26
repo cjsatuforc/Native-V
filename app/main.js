@@ -57,7 +57,8 @@ app.on('ready', function() {
         mainWindow = null;
     });
 
-    mainWindow.openDevTools();
+
+
 
     // mainWindow.webContents.once("loaded", function () {
     //     var http = require("http");
@@ -89,11 +90,11 @@ app.on('ready', function() {
     })
 
 
-
+    mainWindow.openDevTools();
+    prefsWindow.openDevTools();
 
     prefsWindow.loadURL('file://' + __dirname + '/settings.html');
     prefsWindow.show();
-    prefsWindow.openDevTools();
 
     require('./scripts/components/menu/mainmenu');
 
@@ -107,6 +108,10 @@ app.on('ready', function() {
     //ipcMain receive scope from Angular and send it back to mainview's ipcRenderer
     ipcMain.on('send-native', function(event, arg) {
         mainWindow.webContents.send('update-native', arg);
+    });
+
+    ipcMain.on('send-model', function(event, arg) {
+        mainWindow.webContents.send('update-model', arg);
     });
 
     //receive CAMERA and send back

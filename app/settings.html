@@ -57,8 +57,8 @@
 			</header>
 			<md-tabs>
 
-                    <md-tab label="General">
-                        <div class="content-wrapper">
+                    <md-tab label="General"><md-tab-label><i class="icon">code</i></md-tab-label>
+						<md-tab-body>
 
                             <md-input-container>
                                 <label>Software Bundle</label>
@@ -86,47 +86,48 @@
 								Debuger
 							</md-switch>
 
-
-                        </div>
-
-						<!-- <script src="scripts/components/scene/scene.js"></script> -->
-
                     </md-tab>
 
-					<!--<md-tab label="Object">-->
+					<md-tab label="Model"><md-tab-label><i class="icon">3d_rotation</i></md-tab-label>
+						<md-tab-body>
 
-						<!--<div class="content-wrapper">-->
+							<md-input-container>
+								<label>Model</label>
+								<md-select ng-model="native.model.selected" ng-change="sendNative(); updateModel();">
+									<md-option ng-repeat="model in native.models" ng-value="model">
+										{{ model.file }}
+									</md-option>
+								</md-select>
+							</md-input-container>
 
-							<!--<md-slider-container>-->
-								<!--<span>Pitch </span>-->
-								<!--<md-slider ng-model="scope.objectSettings.rotation.x" min="-3" max="3" step="0.01" ng-change="scope.sendObjectParams()">-->
-								<!--</md-slider>-->
-								<!--<span class="value"> {{scope.objectSettings.rotation.x}}</span>-->
-							<!--</md-slider-container>-->
+							<!-- <md-slider-container>
+								<span>Pitch </span>
+								<md-slider ng-model="scope.objectSettings.rotation.x" min="-3" max="3" step="0.01" ng-change="scope.sendObjectParams()">
+								</md-slider>
+								<span class="value"> {{scope.objectSettings.rotation.x}}</span>
+							</md-slider-container>
 
-							<!--<md-slider-container>-->
-								<!--<span>Roll </span>-->
-								<!--<md-slider ng-model="scope.objectSettings.rotation.y" min="-3" max="3" step="0.01" ng-change="scope.sendObjectParams()">-->
-								<!--</md-slider>-->
-								<!--<span class="value"> {{scope.objectSettings.rotation.y}}</span>-->
-							<!--</md-slider-container>-->
+							<md-slider-container>
+								<span>Roll </span>
+								<md-slider ng-model="scope.objectSettings.rotation.y" min="-3" max="3" step="0.01" ng-change="scope.sendObjectParams()">
+								</md-slider>
+								<span class="value"> {{scope.objectSettings.rotation.y}}</span>
+							</md-slider-container>
 
-							<!--<md-slider-container>-->
-								<!--<span>Yaw </span>-->
-								<!--<md-slider ng-model="scope.objectSettings.rotation.z" min="-3" max="3" step="0.01" ng-change="scope.sendObjectParams()">-->
-								<!--</md-slider>-->
-								<!--<span class="value"> {{scope.objectSettings.rotation.z}}</span>-->
-							<!--</md-slider-container>-->
+							<md-slider-container>
+								<span>Yaw </span>
+								<md-slider ng-model="scope.objectSettings.rotation.z" min="-3" max="3" step="0.01" ng-change="scope.sendObjectParams()">
+								</md-slider>
+								<span class="value"> {{scope.objectSettings.rotation.z}}</span>
+							</md-slider-container> -->
 
-							<!--<md-button ng-click="scope.resetObjectOrient()">Reset Orientation</md-button>-->
+							<md-button ng-click="scope.resetObjectOrient()">Reset Orientation</md-button>
+						</md-tab-body>
+					</md-tab>
 
-						<!--</div>-->
-					<!--</md-tab>-->
 
-
-				<md-tab md-autoselect label="Camera">
-
-					<div class="content-wrapper">
+					<md-tab label="Camera"><md-tab-label><i class="icon">camera</i></md-tab-label>
+						<md-tab-body>
 
 						<md-slider-container>
 						<span>X </span>
@@ -176,10 +177,12 @@
 
 						<!--<md-button ng-click="scope.recenter()">Recenter View</md-button>-->
 						<md-button ng-click="resetCamera()">Reset Values</md-button>
+					</md-tab-body>
+				</md-tab>
 
-						</md-content>
-
-					</div>
+				<md-tab label="Model"><md-tab-label><i class="icon">bug_report</i></md-tab-label>
+					<md-tab-body>
+					</md-tab-body>
 				</md-tab>
 
 			</md-tabs>
