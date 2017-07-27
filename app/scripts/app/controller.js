@@ -15,16 +15,7 @@ ipcRenderer.on('update-native', function(event, arg) {
     native = arg;
 });
 
-<<<<<<< HEAD
-=======
-//Recieve updted scope
-ipcRenderer.on('enterVR', function(event, arg) {
-    console.log('govr');
-    vrDisplay.requestPresent([{source: renderer.domElement}]);
-});
 
-
->>>>>>> 4d03409957a175f37e2e123ff1c0bb45c743c41e
 (function(){
     angular
         .module('app', ['ngMaterial', 'ngAnimate'])
@@ -77,11 +68,7 @@ ipcRenderer.on('enterVR', function(event, arg) {
         }
 
         $scope.enterVR = function(){
-<<<<<<< HEAD
           ipcRenderer.send('open-vr');
-=======
-            ipcRenderer.send('enterVR');
->>>>>>> 4d03409957a175f37e2e123ff1c0bb45c743c41e
         }
 
         $scope.save = function(){

@@ -4,6 +4,7 @@ const electron = require('electron');
 const {app} = electron;
 const {BrowserWindow} = electron;
 const {ipcMain} = electron;
+const {protocol} = require('electron');
 
 const os = require('os');
 var path = require('path')
@@ -43,9 +44,18 @@ app.commandLine.appendSwitch('--enable-experimental-web-platform-features')
 app.commandLine.appendSwitch('--enable-webvr')
 app.commandLine.appendSwitch('--enable-gamepad-extensions')
 
-app.setAsDefaultProtocolClient('native');
+
 
 app.on('ready', function() {
+
+    // 
+    // protocol.registerBufferProtocol('native', (request, callback) => {
+    //   callback({mimeType: 'text/html', data: Buffer.from('<h5>Response</h5>')});
+    //   console.error('norm')
+    // }, (error) => {
+    //   if (error) console.error('Failed to register protocol')
+    // })
+
 
     logger.debug("Starting application");
 
@@ -64,8 +74,8 @@ app.on('ready', function() {
         // alwaysOnTop: true
     });
 
-    // mainWindow.loadURL('file://' + __dirname + "/index.html");
-    mainWindow.loadURL('file://' + __dirname + "/scripts/components/webvr/index.html");
+    mainWindow.loadURL('file://' + __dirname + "/index.html");
+    // mainWindow.loadURL('file://' + __dirname + "/scripts/components/webvr/index.html");
 
 
     mainWindow.on('closed', function() {

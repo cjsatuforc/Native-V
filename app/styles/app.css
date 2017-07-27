@@ -1,14 +1,11 @@
 html{
     background: rgba(0,0,0,0.0);
-<<<<<<< HEAD
      overflow: hidden;
 }
 
 html::-webkit-scrollbar {
   width: 0px;
   background: transparent;
-=======
->>>>>>> 4d03409957a175f37e2e123ff1c0bb45c743c41e
 }
 
 html, body {
@@ -19,7 +16,6 @@ html, body {
   height:100%;
   margin: 0px;
   padding: 0px;
-<<<<<<< HEAD
   color: white;
   background: rgba(0,0,0,0.3);
   overflow: hidden;
@@ -56,22 +52,6 @@ iframe{
     z-index: -1;
 }
 
-=======
-    color: white;
-    background: rgba(0,0,0,0.0);
-    overflow: hidden;
-    -webkit-font-smoothing: antialiased;
-}
-
-iframe{
-    border: none;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-}
-
->>>>>>> 4d03409957a175f37e2e123ff1c0bb45c743c41e
 /*body{
     -webkit-filter: blur(10px);
     transition: 1s 1s ease;
@@ -161,10 +141,7 @@ body.settings {
 }
 
 header{
-<<<<<<< HEAD
   /*-webkit-app-region: drag;*/
-=======
->>>>>>> 4d03409957a175f37e2e123ff1c0bb45c743c41e
     display: flex;
     position: fixed;
     top: 0;
@@ -218,11 +195,6 @@ canvas{
 
 md-tabs-content-wrapper{
 }
-<<<<<<< HEAD
-
-.global-wrapper{
-    background: radial-gradient(circle at center, rgba(45, 30, 78, 0.08), rgba(0, 101, 140, 0.12))
-=======
 
 .global-wrapper{
     background: radial-gradient(circle at center, rgba(45, 30, 78, 0.08), rgba(0, 101, 140, 0.12))
@@ -234,7 +206,6 @@ md-tabs-content-wrapper{
     display: flex;
     justify-content: center;
     align-items: center;
->>>>>>> 4d03409957a175f37e2e123ff1c0bb45c743c41e
 }
 
 header button{
@@ -242,23 +213,10 @@ header button{
 }
 
 
-<<<<<<< HEAD
-.md-button{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-header button{
-    z-index: 10;
-}
-
-
-=======
->>>>>>> 4d03409957a175f37e2e123ff1c0bb45c743c41e
 md-tabs .md-tab.md-active{
     color: white;
 }
+
 md-tabs .md-tab{
     color: rgba(255,255,255,0.5);
     font-size: 13px;
