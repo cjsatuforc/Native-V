@@ -4,7 +4,6 @@ const electron = require('electron');
 const {app} = electron;
 const {BrowserWindow} = electron;
 const {ipcMain} = electron;
-const {shell} = require('electron')
 
 const os = require('os');
 var path = require('path')
@@ -116,10 +115,20 @@ app.on('ready', function() {
       shell.openExternal('http://localhost:8080');
     })
 
+
     //ipcMain receive scope from Angular and send it back to mainview's ipcRenderer
     ipcMain.on('send-native', function(event, arg) {
             mainWindow.webContents.send('update-native', arg);
     });
+
+    ipcMain.on('send-model', function(event, arg) {
+            mainWindow.webContents.send('update-model', arg);
+    });
+
+    ipcMain.on('enterVR', function(event, arg) {
+        mainWindow.webContents.send('enterVR', arg);
+    });
+
 
     //receive CAMERA and send back
     ipcMain.on('send-camera', function(event, arg) {
