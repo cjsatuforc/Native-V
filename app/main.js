@@ -4,6 +4,8 @@ const electron = require('electron');
 const {app} = electron;
 const {BrowserWindow} = electron;
 const {ipcMain} = electron;
+const {shell} = require('electron')
+
 const os = require('os');
 var path = require('path')
 var fs = require('fs');
@@ -12,12 +14,21 @@ var fs = require('fs');
 //Menubar
 var menubar = require('menubar')
 var mb = menubar({
-    index: 'file://' + __dirname + '/settings.html'
+    index: 'file://' + __dirname + '/settings.html',
+    icon:  'file://' + __dirname + '/assets/IconTemplate.png',
+    tooltip: 'Native',
+    width: 300,
+    height: 600,
+    showDockIcon: true,
+    transparent: true,
+    frame: true,
+    vibrancy: 'dark',
+    alwaysOnTop: true,
+    titleBarStyle: 'hidden'
 })
 
 mb.on('ready', function ready () {
 })
-
 
 
 const logger = require('winston');
@@ -30,7 +41,10 @@ app.on('window-all-closed', function() {
 });
 
 app.commandLine.appendSwitch('--enable-experimental-web-platform-features')
+app.commandLine.appendSwitch('--enable-webvr')
+app.commandLine.appendSwitch('--enable-gamepad-extensions')
 
+app.setAsDefaultProtocolClient('native');
 
 app.on('ready', function() {
 
@@ -39,40 +53,47 @@ app.on('ready', function() {
     var mainWindow = new BrowserWindow({
         width: 950,
         height: 550,
-        toolbar: true,
+        toolbar: false,
         title: "Native",
         transparent: true,
-        frame: true,
-        titleBarStyle: 'hidden-inset'
+        frame: false,
+        titleBarStyle: 'hidden-inset',
+        vibrancy: 'dark',
+        x: 1500,
+        y: 0,
+        show: true,
+        // alwaysOnTop: true
     });
-    mainWindow.loadURL('file://' + __dirname + "/index.html");
+
+    // mainWindow.loadURL('file://' + __dirname + "/index.html");
+    mainWindow.loadURL('file://' + __dirname + "/scripts/components/webvr/index.html");
+
+
     mainWindow.on('closed', function() {
         mainWindow = null;
     });
-    mainWindow.openDevTools();
+
+
 
 
     var prefsWindow = new BrowserWindow({
         width: 300,
         height: 600,
-        show: false,
+        show: true,
         transparent: true,
-        frame: true,
+        frame: false,
         titleBarStyle: 'hidden-inset',
-        toolbar: true,
+        toolbar: false,
         x: 100,
-        y: 150
+        y: 150,
+        vibrancy: 'dark'
     })
 
 
-    // var nativeHandleBuffer = mainWindow.getNativeWindowHandle();
-    // var electronVibrancy = require(path.join(__dirname,'..','..'));
-    // electron.remote.getCurrentWindow().setVibrancy('medium-light')
-    // SetVibrancy(mainWindow, 6)
+    mainWindow.openDevTools();
+    prefsWindow.openDevTools();
 
     prefsWindow.loadURL('file://' + __dirname + '/settings.html');
-    // prefsWindow.show();
-    prefsWindow.openDevTools();
 
     require('./scripts/components/menu/mainmenu');
 
@@ -83,16 +104,27 @@ app.on('ready', function() {
             prefsWindow.show()
     })
 
+    ipcMain.on('toggle-preview', function (arg) {
+        if (arg){
+            mainWindow.show()
+        }else{
+            mainWindow.hide()
+            }
+    })
+
+    ipcMain.on('open-vr', function (arg) {
+      shell.openExternal('http://localhost:8080');
+    })
+
     //ipcMain receive scope from Angular and send it back to mainview's ipcRenderer
     ipcMain.on('send-native', function(event, arg) {
-        mainWindow.webContents.send('update-native', arg);
+            mainWindow.webContents.send('update-native', arg);
     });
 
     //receive CAMERA and send back
     ipcMain.on('send-camera', function(event, arg) {
-        mainWindow.webContents.send('update-camera', arg);
-        prefsWindow.webContents.send('update-camera', arg);
+            mainWindow.webContents.send('update-camera', arg);
+            prefsWindow.webContents.send('update-camera', arg);
     });
-
 
 });

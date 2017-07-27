@@ -1,4 +1,4 @@
-var container, neck, scene, renderer, composer, effect;
+var container, neck, scene, renderer, composer, stereorender;
 var camera;
 var object;
 var updateDistortionEffect;
@@ -27,13 +27,16 @@ var lineMaterial =  new THREE.LineDashedMaterial( {
     gapSize: 10,
 });
 
-var lineGeometry = new THREE.Geometry();
-lineGeometry.dynamic = true;
-lineGeometry.verticesNeedUpdate = true;
-lineGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
-lineGeometry.vertices.push(new THREE.Vector3(100, 200, 900));
-var line = new THREE.Line(lineGeometry, lineMaterial);
-scene.add(line);
+
+if (native.laser){
+    var lineGeometry = new THREE.Geometry();
+    lineGeometry.dynamic = true;
+    lineGeometry.verticesNeedUpdate = true;
+    lineGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
+    lineGeometry.vertices.push(new THREE.Vector3(100, 200, 900));
+    var line = new THREE.Line(lineGeometry, lineMaterial);
+    scene.add(line);
+}
 
 
 neck.add(camera);
@@ -45,7 +48,7 @@ neck.rotation._x = 200;  // X second
 // object
 var loader = new THREE.STLLoader();
 
-loader.load( 'assets/cat.stl', function ( geometry ) {
+loader.load( 'assets/model.stl', function ( geometry ) {
     var material=new THREE.MeshNormalMaterial({
         linewidth: 0.01,
         wireframe: true,
@@ -54,38 +57,48 @@ loader.load( 'assets/cat.stl', function ( geometry ) {
     });
     var mesh=new THREE.Mesh(geometry, material);
     mesh.name="model"
-    mesh.scale.set(0.7, 0.7, 0.7);
-    mesh.translateY(3)
+    mesh.scale.set(0.3, 0.3, 0.3);
+    mesh.translateY(-1.4)
     mesh.translateX(0)
     mesh.translateZ(0)
-
-    mesh.rotateX(-1.3)
-    mesh.rotateZ(1.0)
+    mesh.rotateX(0)
+    mesh.rotateZ(0)
 
     mesh.material.needsUpdate = true;
-
-    //MODEL HERE
     scene.add(mesh);
-} );
+});
+
+ipcRenderer.on('update-model', function(event, arg) {
+    console.log(arg);
+});
+
+// loadModel(native.model.file, native.model.scale, native.model.position, native.model.rotation);
+//
+// function loadModel(file, scale, position, rotation){
+//     loader.load( file, function ( geometry ) {
+//         var material=new THREE.MeshNormalMaterial({
+//             linewidth: 0.005,
+//             wireframe: true,
+//             transparent: true,
+//             opacity: 0.7,
+//         });
+//         var mesh=new THREE.Mesh(geometry, material);
+//         mesh.name="model"
+//         mesh.scale.set(scale, scale, scale);
+//         mesh.translateX(position[0])
+//         mesh.translateY(position[1])
+//         mesh.translateZ(position[2])
+//         mesh.rotateX(rotation[0])
+//         mesh.rotateY(rotation[1])
+//         mesh.rotateZ(rotation[2])
+//         mesh.material.needsUpdate = true;
+//         scene.add(mesh);
+//     });
+// }
 
 
-// renderer
-renderer = new THREE.WebGLRenderer( { alpha: true } );
 
-container.appendChild(renderer.domElement);
-
-if (!mono){
-    renderer.setPixelRatio( window.devicePixelRatio ); //????
-
-    composer = new THREE.EffectComposer( renderer );
-    composer.addPass( new THREE.RenderPass( scene, camera ) );
-
-    effect = new THREE.StereoEffect( renderer );
-    effect.setSize( window.innerWidth, window.innerHeight );
-}
-
-
-window.addEventListener( 'resize', onWindowResize, false );
+window.addEventListener( 'resize', viewResize, false );
 
 
 var boxWidth = 90;
@@ -102,7 +115,7 @@ function onTextureLoaded(texture) {
         map: texture,
         transparent: true,
         opacity: 0.4,
-        color: 0x01BE00,
+        color: 0x0B5394,
         side: THREE.BackSide
     });
 
@@ -113,21 +126,45 @@ function onTextureLoaded(texture) {
 
 neck = new THREE.Object3D();
 
-camera.flighAround = false;
 
 
-function onWindowResize(){
+function viewResize(){
 
         windowHalfX = window.innerWidth / 2;
         windowHalfY = window.innerHeight / 2;
-        effect.setSize( window.innerWidth, window.innerHeight );
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        stereorender.setSize( window.innerWidth, window.innerHeight );
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+}
+
+setRenderer();
+
+function setRenderer(){
+
+        renderer = new THREE.WebGLRenderer( { alpha: true } );
+        renderer.setPixelRatio( window.devicePixelRatio );
+
+        stereorender = new THREE.StereoEffect( renderer );
+        stereorender.setSize( window.innerWidth, window.innerHeight );
+
+        composer = new THREE.EffectComposer( renderer );
+        composer.addPass( new THREE.RenderPass( scene, camera ) );
+
+
+        container.appendChild(renderer.domElement);
+
+    if (native.camera.stereo){
+    };
+
+//     var renderer = new THREE.WebGLRenderer();
+// renderer.setSize( width,height);
+// document.body.appendChild( renderer.domElement );
+
+    viewResize();
 }
 
 
-//getting init parms
-// cameraInit();
 animate();
 
 function animate(){
@@ -135,22 +172,21 @@ function animate(){
     render();
 }
 
-
 function render(){
-
 
     var timer=Date.now() * 0.000001;
     var r=150;
     // var faceData = faceData;
     var object = scene.getObjectByName("model");
-    object.rotation.z=r*Math.sin(timer);
+    object.rotation.y=r*Math.sin(timer);
 
     if (camera.lookAtObj) {
         camera.lookAt(scene.position);
     }
-    if (!mono){
-        effect.render( scene, camera );
+
+    if (native.camera.stereo){
+        stereorender.render( scene, camera);
     } else {
-        renderer.render(scene, camera);
+       renderer.render(scene, camera);
     }
 }

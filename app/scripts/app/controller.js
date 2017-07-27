@@ -9,14 +9,11 @@ ipcRenderer.on('update-camera', function(event, arg) {
     camera.rotation.z = arg.rotation.z;
     camera.lookAtObj = arg.lookAtObj;
 });
+
 //Recieve updted scope
 ipcRenderer.on('update-native', function(event, arg) {
     native = arg;
 });
-
-
-var native = native;
-
 
 (function(){
     angular
@@ -37,10 +34,7 @@ var native = native;
         //updatescope of mainWindow
         ipcRenderer.on('update-camera', function(event, arg) {
             $scope.native.camera = arg;
-            $scope.native.camera.rotation.x = camera.rotation.x;
-            // $scope.$apply();
         });
-
 
         //sending scope to ipcMain
         $scope.sendNative = function () {
@@ -57,24 +51,42 @@ var native = native;
         //sending CAMERA scope to ipcMain
         $scope.sendCamera = function () {
             ipcRenderer.send('send-camera', native.camera);
-
         }
 
-        $scope.resetCamera = function () {
-            console.log('NADO SDELAT')
-            ipcRenderer.send('send-camera', native.camera);
+        $scope.sendModel = function () {
+            ipcRenderer.send('send-model', native.model);
+        }
+
+        // $scope.resetCamera = function () {
+        //     console.log('NADO SDELAT')
+        //     ipcRenderer.send('send-camera', native.camera);
+        // }
+
+        $scope.togglePreview = function(){
+            ipcRenderer.send('toggle-preview', native.preview);
+        }
+
+        $scope.enterVR = function(){
+          ipcRenderer.send('open-vr');
+        }
+
+        $scope.save = function(){
+            localstorage.setItem('native', JSON.stringify(native));
         }
 
         $scope.reloadPage = function () {
             location.reload();
         }
 
+        $scope.updateModel = function(model){
+            loadModel(model.file, model.scale, model.position, model.rotation);
+        }
+
         $scope.sendNative();
         $scope.sendCamera();
-
     }
-
 })();
+
 
 function toggleHeadtracking(){
     if (native.headtracking.active) {
@@ -88,17 +100,6 @@ function toggleHeadtracking(){
 }
 
 
-
-// ipcRenderer.on('send-headtracking', function(event, arg) {
-//     var headtracking = headtracking;
-//     if (headtracking.active) {
-//         brfv4Example.start();
-//     } else {
-//         window.onload = brfv4Example.stop;
-//     }
-//     console.log(headtracking);
-// });
-
 function getFace(facos){
     data = facos[0];
     native.headtracking.head.position.x = data.translationX;
@@ -107,7 +108,7 @@ function getFace(facos){
     native.headtracking.head.rotation.y = data.rotationY;
     native.headtracking.head.rotation.z = data.rotationZ;
     native.headtracking.head.scale = data.scale;
-    ipcRenderer.send('send-native', native);
+    // ipcRenderer.send('send-native', native);
 }
 
 function getSmile(smileFactor){
