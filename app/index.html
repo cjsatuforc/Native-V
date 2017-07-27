@@ -14,17 +14,20 @@
 
 	<script>
 
-		// var STLLoader = require('../node_modules/three/examples/js/loaders/STLLoader.js').join
-
         var THREE = require('three');
         var OrbitControls = require('../node_modules/three/examples/js/controls/OrbitControls.js').join
+		var VRControls = require('../node_modules/three/examples/js/controls/VRControls.js').join
+
         var EffectComposer = require('../node_modules/three/examples/js/postprocessing/EffectComposer.js').join
         var RenderPass = require('../node_modules/three/examples/js/postprocessing/RenderPass.js').join
         var MaskPass = require('../node_modules/three/examples/js/postprocessing/MaskPass.js').join
         var ShaderPass = require('../node_modules/three/examples/js/postprocessing/ShaderPass.js').join
         var StereoShader = require('../node_modules/three/examples/js/effects/StereoEffect.js').join
+		var VREffect = require('../node_modules/three/examples/js/effects/VREffect.js').join
+
         var CopyShader = require('../node_modules/three/examples/js/shaders/CopyShader.js').join
         var STLLoader = require('../node_modules/three/examples/js/loaders/STLLoader.js').join
+		var webvrpolyfill = require('../node_modules/three/build/webvr-polyfill.js').join
 
 	</script>
 
@@ -91,17 +94,14 @@
 	</div>
 
 	<script src="scripts/components/scene/scene.js"></script>
+	<!-- <script src="scripts/components/scene/VRscene.js"></script> -->
 
 	<iframe src="fluid.html"></iframe>
 	<video id="desktop"></video>
 
 	<div class="debug" ng-if="native.debuger" style="display: flex; width: 400px; flex-direction: column; position: fixed; bottom: 0; left:0;">
 		<span> {{ native }} </span>
-		<!-- <span> {{native.camera.stereo}} </span>
-		<span> {{native.headtracking}} </span>
-		<span> {{native.headtracking.fullscreen}} </span> -->
 	</div>
-
 
 
 

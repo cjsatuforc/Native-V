@@ -66,7 +66,7 @@ loader.load( 'assets/model.stl', function ( geometry ) {
 
     mesh.material.needsUpdate = true;
     scene.add(mesh);
-} );
+});
 
 ipcRenderer.on('update-model', function(event, arg) {
     console.log(arg);

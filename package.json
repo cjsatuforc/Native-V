@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "install-app-deps",
     "start": "electron ./app --enable-logging --remote-debugging-port=9222",
-    "server": "electron ./app server.js",
+    "server": "electron ./app/server.js",
     "dev": "NODE_ENV='development' npm run start",
     "clean": "rm -rf ./dist",
     "clean:osx": "rm -rf ./dist/osx",

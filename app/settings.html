@@ -82,7 +82,7 @@
 
 
                             <md-switch ng-model="native.headtracking.active" ng-change="sendNative()">
-                                Facetrackingggg
+                                Facetracking
                             </md-switch>
 
 							<md-switch ng-model="native.headtracking.fullscreen" ng-change="sendNative()">
@@ -100,6 +100,10 @@
 							<md-switch ng-model="native.preview" ng-change="togglePreview(this.value);">
 								Preview
 							</md-switch>
+
+							<md-button ng-click="enterVR();">
+							 <i class="icon">EnterVR</i>
+						   </md-button>
 
                     </md-tab>
 

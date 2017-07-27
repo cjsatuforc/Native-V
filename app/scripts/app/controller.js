@@ -15,6 +15,12 @@ ipcRenderer.on('update-native', function(event, arg) {
     native = arg;
 });
 
+//Recieve updted scope
+ipcRenderer.on('enterVR', function(event, arg) {
+    console.log('govr');
+    vrDisplay.requestPresent([{source: renderer.domElement}]);
+});
+
 
 (function(){
     angular
@@ -65,6 +71,10 @@ ipcRenderer.on('update-native', function(event, arg) {
 
         $scope.togglePreview = function(){
             ipcRenderer.send('toggle-preview', native.preview);
+        }
+
+        $scope.enterVR = function(){
+            ipcRenderer.send('enterVR');
         }
 
         $scope.save = function(){

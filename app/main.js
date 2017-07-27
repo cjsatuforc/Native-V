@@ -9,34 +9,6 @@ const os = require('os');
 var path = require('path')
 var fs = require('fs');
 
-// const repl = require('repl');
-// const replServer = repl.start({ prompt: '>>> ' });
-// replServer.defineCommand('sayhello', {
-//   help: 'Say hello',
-//   action(name) {
-//     this.bufferedCommand = '';
-//     console.log(`Hello, ${name}!`);
-//     this.displayPrompt();
-//   }
-// });
-// replServer.defineCommand('saybye', function saybye() {
-//   console.log('Goodbye!');
-//   this.close();
-// });
-
-const repl = require('repl');
-
-function initializeContext(context) {
-  context.m = 'test';
-}
-
-const r = repl.start({ prompt: '> ' });
-initializeContext(r.context);
-
-r.on('reset', initializeContext);
-
-
-
 
 //Menubar
 var menubar = require('menubar')
@@ -84,7 +56,7 @@ app.on('ready', function() {
         titleBarStyle: 'hidden-inset',
         vibrancy: 'dark',
         show: true,
-        alwaysOnTop: true
+        // alwaysOnTop: true
     });
     mainWindow.hide()
 
@@ -95,20 +67,6 @@ app.on('ready', function() {
     });
 
 
-    // mainWindow.webContents.once("loaded", function () {
-    //     var http = require("http");
-    //     var crypto = require("crypto");
-    //     var server = http.createServer(function (req, res) {
-    //         var port = crypto.randomBytes(16).toString("hex");
-    //         ipcMain.once(port, function (ev, status, head, body) {
-    //             res.writeHead(status, head);
-    //             res.end(body);
-    //         });
-    //         mainWindow.webContents.send("request", req, port);
-    //     });
-    //     server.listen(8000);
-    //     console.log("http://localhost:8000/");
-    // });
 
 
     var prefsWindow = new BrowserWindow({
@@ -155,6 +113,11 @@ app.on('ready', function() {
     ipcMain.on('send-model', function(event, arg) {
             mainWindow.webContents.send('update-model', arg);
     });
+
+    ipcMain.on('enterVR', function(event, arg) {
+        mainWindow.webContents.send('enterVR', arg);
+    });
+
 
     //receive CAMERA and send back
     ipcMain.on('send-camera', function(event, arg) {
