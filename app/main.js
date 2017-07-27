@@ -4,9 +4,38 @@ const electron = require('electron');
 const {app} = electron;
 const {BrowserWindow} = electron;
 const {ipcMain} = electron;
+
 const os = require('os');
 var path = require('path')
 var fs = require('fs');
+
+// const repl = require('repl');
+// const replServer = repl.start({ prompt: '>>> ' });
+// replServer.defineCommand('sayhello', {
+//   help: 'Say hello',
+//   action(name) {
+//     this.bufferedCommand = '';
+//     console.log(`Hello, ${name}!`);
+//     this.displayPrompt();
+//   }
+// });
+// replServer.defineCommand('saybye', function saybye() {
+//   console.log('Goodbye!');
+//   this.close();
+// });
+
+const repl = require('repl');
+
+function initializeContext(context) {
+  context.m = 'test';
+}
+
+const r = repl.start({ prompt: '> ' });
+initializeContext(r.context);
+
+r.on('reset', initializeContext);
+
+
 
 
 //Menubar
@@ -15,9 +44,14 @@ var mb = menubar({
     index: 'file://' + __dirname + '/settings.html',
     icon:  'file://' + __dirname + '/assets/IconTemplate.png',
     tooltip: 'Native',
-    width: 250,
-    height: 400,
-    showDockIcon: true
+    width: 300,
+    height: 600,
+    showDockIcon: true,
+    transparent: true,
+    frame: true,
+    vibrancy: 'dark',
+    alwaysOnTop: true,
+    titleBarStyle: 'hidden'
 })
 
 mb.on('ready', function ready () {
@@ -48,16 +82,17 @@ app.on('ready', function() {
         transparent: true,
         frame: true,
         titleBarStyle: 'hidden-inset',
-        vibrancy: 'dark'
+        vibrancy: 'dark',
+        show: true,
+        alwaysOnTop: true
     });
-
+    mainWindow.hide()
 
     mainWindow.loadURL('file://' + __dirname + "/index.html");
+
     mainWindow.on('closed', function() {
         mainWindow = null;
     });
-
-
 
 
     // mainWindow.webContents.once("loaded", function () {
@@ -91,10 +126,9 @@ app.on('ready', function() {
 
 
     mainWindow.openDevTools();
-    prefsWindow.openDevTools();
+    // prefsWindow.openDevTools();
 
     prefsWindow.loadURL('file://' + __dirname + '/settings.html');
-    prefsWindow.show();
 
     require('./scripts/components/menu/mainmenu');
 
@@ -105,20 +139,27 @@ app.on('ready', function() {
             prefsWindow.show()
     })
 
+    ipcMain.on('toggle-preview', function (arg) {
+        if (arg){
+            mainWindow.show()
+        }else{
+            mainWindow.hide()
+            }
+    })
+
     //ipcMain receive scope from Angular and send it back to mainview's ipcRenderer
     ipcMain.on('send-native', function(event, arg) {
-        mainWindow.webContents.send('update-native', arg);
+            mainWindow.webContents.send('update-native', arg);
     });
 
     ipcMain.on('send-model', function(event, arg) {
-        mainWindow.webContents.send('update-model', arg);
+            mainWindow.webContents.send('update-model', arg);
     });
 
     //receive CAMERA and send back
     ipcMain.on('send-camera', function(event, arg) {
-        mainWindow.webContents.send('update-camera', arg);
-        prefsWindow.webContents.send('update-camera', arg);
+            mainWindow.webContents.send('update-camera', arg);
+            prefsWindow.webContents.send('update-camera', arg);
     });
-
 
 });

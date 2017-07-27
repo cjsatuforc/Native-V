@@ -11,7 +11,11 @@
 	<script type="text/javascript" src="./node_modules/angular-animate/angular-animate.js"></script>
 	<script type="text/javascript" src="./node_modules/angular-material/angular-material.js"></script>
 
+
 	<script>
+
+		// var STLLoader = require('../node_modules/three/examples/js/loaders/STLLoader.js').join
+
         var THREE = require('three');
         var OrbitControls = require('../node_modules/three/examples/js/controls/OrbitControls.js').join
         var EffectComposer = require('../node_modules/three/examples/js/postprocessing/EffectComposer.js').join
@@ -37,7 +41,7 @@
 	<script src="scripts/components/computerVision/brf/libs/createjs/preloadjs-0.6.2.min.js"></script>
 	<script src="scripts/components/computerVision/brf/BRFv4Demo.js"></script>
 
-
+	<script src="http://localhost:35729/livereload.js"></script>
 
 </head>
 <body ng-controller="ViewController as scope">
@@ -87,6 +91,9 @@
 	</div>
 
 	<script src="scripts/components/scene/scene.js"></script>
+
+	<iframe src="fluid.html"></iframe>
+	<video id="desktop"></video>
 
 	<div class="debug" ng-if="native.debuger" style="display: flex; width: 400px; flex-direction: column; position: fixed; bottom: 0; left:0;">
 		<span> {{ native }} </span>

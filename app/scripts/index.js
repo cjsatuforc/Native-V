@@ -1,6 +1,10 @@
 const electron = require('electron');
 const {ipcRenderer} = electron;
 const {remote} = electron;
+// const {desktopCapturer} = require('electron'); //Desktop capurer
+
+// const repl = require('repl');
+
 
 function boot() {
 
@@ -10,8 +14,6 @@ function boot() {
     angular.bootstrap(document, ['app'], {
         strictDi: true
     });
-
-
 }
 
 var interval = setInterval(function() {
@@ -46,13 +48,19 @@ native = {
         stereo: false,
     },
     model: {
-        file: 'assets/native.stl',
+        file: 'assets/model.stl',
         scale: 0.3,
         rotation: [0,0,0],
         position: [0, 0, 0],
         rotate: true,
     },
     models: [
+        {
+            file: 'assets/model.stl',
+            scale: 0.5,
+            rotation: [0,0,0],
+            position: [0, 0, 0],
+        },
         {
             file: 'assets/Shelby.stl',
             scale: 0.5,
@@ -67,7 +75,7 @@ native = {
         },
     ],
     headtracking: {
-        active: true,
+        active: false,
         headtracking: false,
         fullscreen: false,
         gazetracking: false,
@@ -90,8 +98,13 @@ native = {
         selected: "Autodesk Fusion",
         bundles: ["Autodesk Fusion", "Autodesk Inventor", "Autocad", "XFLOW"]
     },
+    visualisation: {
+        selected: "Visualisation",
+        types: ["Visualisation", "Fluid Dynamics", "Thermodynamics", "Stress test", "Drop test"]
+    },
     debuger: true,
-    laser: false
+    laser: false,
+    preview: false
 }
 
 

@@ -63,6 +63,10 @@ ipcRenderer.on('update-native', function(event, arg) {
         //     ipcRenderer.send('send-camera', native.camera);
         // }
 
+        $scope.togglePreview = function(){
+            ipcRenderer.send('toggle-preview', native.preview);
+        }
+
         $scope.save = function(){
             localstorage.setItem('native', JSON.stringify(native));
         }
