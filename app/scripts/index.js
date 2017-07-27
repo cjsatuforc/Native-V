@@ -36,7 +36,7 @@ native = {
     camera: {
         position: {
             x: -93,
-            y: 5,
+            y: 60,
             z: 160,
         },
         rotation: {
