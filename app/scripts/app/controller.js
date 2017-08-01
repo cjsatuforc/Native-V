@@ -164,10 +164,23 @@ ipcRenderer.on('update-native', function(event, arg) {
             loadModel(model.file, model.scale, model.position, model.rotation);
         }
 
+        $scope.HttpGet = function(request){
+            httpGet(request);
+        }
+
         $scope.sendNative();
         $scope.sendCamera();
     }
 })();
+
+
+function httpGet(request) {
+    var url = "http://localhost:3000/";
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", url + request, false );
+    xmlHttp.send ( null );
+    return xmlHttp.responseText;
+}
 
 
 function toggleHeadtracking(){

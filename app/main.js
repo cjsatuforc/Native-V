@@ -73,11 +73,12 @@ app.on('ready', function() {
         width: 340,
         height: 200,
         toolbar: false,
-        title: "Native",
+        title: "Electron",
         transparent: true,
         frame: false,
         titleBarStyle: 'hidden-inset',
         vibrancy: 'dark',
+        icon: path.join(__dirname, 'assets/icons/png/64x64.png'),
         x: 1500,
         y: 1000,
         show: true,
@@ -109,9 +110,6 @@ app.on('ready', function() {
     })
 
 
-    mainWindow.openDevTools();
-    // prefsWindow.openDevTools();
-
     prefsWindow.loadURL('file://' + __dirname + '/settings.html');
 
     require('./scripts/components/menu/mainmenu');
@@ -135,7 +133,6 @@ app.on('ready', function() {
       shell.openExternal('http://localhost:8080');
     })
 
-
     //ipcMain receive scope from Angular and send it back to mainview's ipcRenderer
     ipcMain.on('send-native', function(event, arg) {
             mainWindow.webContents.send('update-native', arg);
@@ -149,19 +146,27 @@ app.on('ready', function() {
         mainWindow.webContents.send('enterVR', arg);
     });
 
-
     //receive CAMERA and send back
     ipcMain.on('send-camera', function(event, arg) {
             mainWindow.webContents.send('update-camera', arg);
             prefsWindow.webContents.send('update-camera', arg);
     });
 
+    //ipcMain receive scope from Angular and send it back to mainview's ipcRenderer
+    ipcMain.on('http-get', function(event, arg) {
+            mainWindow.webContents.send('http-get', arg);
+            prefsWindow.webContents.send('http-get', arg);
+    });
 
-    //Setup express server
+    //Setup express server for api
     const express = require('express');
     const bodyParser = require('body-parser');
-
     const api = express();
+
+    //setup webserver
+    const server = require('http').createServer(api);
+
+
     api.use(bodyParser.json({ limit: '50mb' }))
 
     api.get('/', function (req, res) {
@@ -191,8 +196,22 @@ app.on('ready', function() {
         res.send(null); // send Null back to end request
     });
 
+    api.get('/open-dev-tools', function(req, res) {
+        mainWindow.openDevTools();
+        prefsWindow.openDevTools();
+        res.send(null); // send Null back to end request
+    });
 
     api.listen(3000, function () {
       console.log('Example app listening on port 3000!')
+    });
+
+    ipcMain.on('source-id-selected', (event, sourceId) => {
+        mainWindow.webContents.send('source-id-selected', sourceId)
     })
+
+    ipcMain.on('show-picker', (event, options) => {
+      prefsWindow.webContents.send('get-sources', options)
+    })
+
 });

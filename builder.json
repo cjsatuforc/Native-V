@@ -2,7 +2,7 @@
   "osx" : {
     "title": "Native",
     "background": "build/background.png",
-    "icon": "build/logo.icns",
+    "icon": "build/icon.icns",
     "icon-size": 128,
     "contents": [
       { "x": 355, "y": 125, "type": "link", "path": "/Applications" },
@@ -11,6 +11,6 @@
   },
   "win" : {
     "title" : "Native",
-    "icon": "build/logo.icns",
+    "icon": "build/icon.icns",
   }
 }

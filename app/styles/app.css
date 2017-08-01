@@ -9,10 +9,10 @@ html::-webkit-scrollbar {
 }
 
 html, body {
-  font-family: monospace;
+  font-family: 'monaco', monospace;
   font-size:14px;
-  font-size: 13px;
-  letter-spacing: 2px;
+  font-size: 12px;
+  letter-spacing: 1px;
   height:100%;
   margin: 0px;
   padding: 0px;
@@ -61,6 +61,13 @@ iframe{
 /*body.loaded{
     -webkit-filter: blur(0px);
 }*/
+
+@font-face {
+  font-family: 'monaco';
+  font-style: normal;
+  font-weight: 400;
+  src: url("../assets/monaco.ttf") format('ttf');
+}
 
 @font-face {
   font-family: 'Icons';
@@ -156,7 +163,7 @@ header{
 
 
 body{
-    font-family: monospace;
+    font-family: 'monaco', monospace;
 }
 
 header.settings{
@@ -198,9 +205,8 @@ md-tabs-content-wrapper{
 }
 
 .global-wrapper{
-    background: radial-gradient(circle at center, rgba(45, 30, 78, 0.08), rgba(0, 101, 140, 0.12))
+    background: background: radial-gradient(circle at center, rgba(45, 30, 78, 0.38), rgba(0, 101, 140, 0.43));
 }
-
 
 
 .md-button{

@@ -41,13 +41,15 @@
 	<!--Material configs (for now)-->
 	<script type="text/javascript" src="scripts/app/config.js"></script>
 
-	<!-- <script src="scripts/components/computerVision/brf/libs/createjs/preloadjs-0.6.2.min.js"></script> -->
-	<!-- <script src="scripts/components/computerVision/brf/BRFv4Demo.js"></script> -->
-
-	<script src="http://localhost:35729/livereload.js"></script>
+	<!-- <script src="scripts/components/computerVision/brf/libs/createjs/preloadjs-0.6.2.min.js"></script>
+	<script src="scripts/components/computerVision/brf/BRFv4Demo.js"></script> -->
 
 </head>
-<body ng-controller="ViewController as scope">
+<body>
+
+	<div class="wtf">
+	<video id="video" autoplay></video>
+   </div>
 
 
 <script>
@@ -97,7 +99,6 @@
 	<script src="scripts/components/scene/scene.js"></script>
 
 	<iframe src="fluid.html" ng-show="native.fluid"></iframe>
-	<video id="desktop"></video>
 
 	<div class="debug" ng-if="native.debuger" style="display: flex; width: 400px; flex-direction: column; position: fixed; bottom: 0; left:0;">
 		<span> {{ native }} </span>
