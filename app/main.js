@@ -234,12 +234,11 @@ app.on('ready', function() {
     });
 
 
-    api.get('/gyro', function(req, res) {
-        console.log('epta')
-        console.log(req)
-        console.log(res)
-        res.send(null); // send Null back to end request
-    });
+    // api.get('/gyro', function(req, res) {
+    //     console.log('epta')
+    //
+    //     res.send(null); // send Null back to end request
+    // });
 
 
 });

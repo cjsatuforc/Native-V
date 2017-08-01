@@ -115,6 +115,8 @@ ipcRenderer.on('updatemodel', function(event, arg) {
             videoWidth = video.videoWidth;
             movieGeometry = new THREE.PlaneGeometry( videoWidth * scale, videoHeight * scale, 1, 1 );
             video.play();
+
+            console.log(video.src)
         });
 
         setupScreen();
