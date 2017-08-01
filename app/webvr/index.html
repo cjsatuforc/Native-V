@@ -8,6 +8,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
 <style>
 html, body {
   width: 100%;
@@ -42,170 +43,222 @@ canvas {
     <button id="reset">Reset</button>
   </div>
 
-</body>
+  <script>
+  WebVRConfig = {
+    BUFFER_SCALE: 1.0,
+  };
 
-<script>
-WebVRConfig = {
-  BUFFER_SCALE: 1.0,
-};
-
-document.addEventListener('touchmove', function(e) {
-  e.preventDefault();
-});
-</script>
-
-<!-- three.js library -->
-<script src="js/three.js"></script>
-
-<!-- VRControls.js applies the WebVR transformations to a three.js camera object. -->
-<script src="js/VRControls.js"></script>
-
-<!-- VREffect.js handles stereo camera setup and rendering.  -->
-<script src="js/VREffect.js"></script>
-
-<script src="js/STLLoader.js"></script>
+  document.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+  });
+  </script>
 
 
-<!-- A polyfill for the WebVR API.  -->
-<script src="js/webvr-polyfill.js"></script>
+  <script src="../scripts/controller.js"></script>
 
 
 
 
-<script>
-// Setup three.js WebGL renderer. Note: Antialiasing is a big performance hit.
-// Only enable it if you actually need to.
-var renderer = new THREE.WebGLRenderer({antialias: false});
-renderer.setPixelRatio(Math.floor(window.devicePixelRatio));
-
-// Append the canvas element created by the renderer to document body element.
-document.body.appendChild(renderer.domElement);
-
-// Create a three.js scene.
-var scene = new THREE.Scene();
-
-// Create a three.js camera.
-var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-
-// Apply VR headset positional data to camera.
-var controls = new THREE.VRControls(camera);
-
-// Apply VR stereo rendering to renderer.
-var effect = new THREE.VREffect(renderer);
-effect.setSize(window.innerWidth, window.innerHeight);
 
 
-// Add a repeating grid as a skybox.
-var boxWidth = 5;
-var loader = new THREE.TextureLoader();
-loader.load('img/box.png', onTextureLoaded);
+  <!-- three.js library -->
+  <script src="js/three.js"></script>
 
-// Get the VRDisplay and save it for later.
-var vrDisplay = null;
-navigator.getVRDisplays().then(function(displays) {
-  if (displays.length > 0) {
-    vrDisplay = displays[0];
+  <!-- VRControls.js applies the WebVR transformations to a three.js camera object. -->
+  <script src="js/VRControls.js"></script>
 
-    // Kick off the render loop.
-    vrDisplay.requestAnimationFrame(animate);
-  }
-});
+  <!-- VREffect.js handles stereo camera setup and rendering.  -->
+  <script src="js/VREffect.js"></script>
 
-function onTextureLoaded(texture) {
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(boxWidth, boxWidth);
+  <script src="js/STLLoader.js"></script>
 
-  var geometry = new THREE.BoxGeometry(boxWidth, boxWidth, boxWidth);
-  var material = new THREE.MeshBasicMaterial({
-    map: texture,
-    color: 0x01BE00,
-    side: THREE.BackSide
+
+  <!-- A polyfill for the WebVR API.  -->
+  <script src="js/webvr-polyfill.js"></script>
+
+
+  <!-- Common vars -->
+  <script src="../scripts/native.js"></script>
+
+
+
+
+  <script>
+  // Setup three.js WebGL renderer. Note: Antialiasing is a big performance hit.
+  // Only enable it if you actually need to.
+
+  var native = native;
+  var renderer = new THREE.WebGLRenderer({antialias: false});
+  renderer.setPixelRatio(Math.floor(window.devicePixelRatio));
+
+  // Append the canvas element created by the renderer to document body element.
+  document.body.appendChild(renderer.domElement);
+
+  // Create a three.js scene.
+  var scene = new THREE.Scene();
+
+  // Create a three.js camera.
+  var camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 10000);
+
+  // Apply VR headset positional data to camera.
+  var controls = new THREE.VRControls(camera);
+
+  // Apply VR stereo rendering to renderer.
+  var effect = new THREE.VREffect(renderer);
+  effect.setSize(window.innerWidth, window.innerHeight);
+
+
+  // Add a repeating grid as a skybox.
+  var boxWidth = 5;
+  var loader = new THREE.TextureLoader();
+  loader.load('../assets/box.png', onTextureLoaded);
+
+  // Get the VRDisplay and save it for later.
+  var vrDisplay = null;
+  navigator.getVRDisplays().then(function(displays) {
+    if (displays.length > 0) {
+      vrDisplay = displays[0];
+
+      // Kick off the render loop.
+      vrDisplay.requestAnimationFrame(animate);
+    }
   });
 
-  var skybox = new THREE.Mesh(geometry, material);
-  scene.add(skybox);
-}
+  function onTextureLoaded(texture) {
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(boxWidth, boxWidth);
 
-// object
-var loader = new THREE.STLLoader();
-
-loader.load( '/assets/model.stl', function ( geometry ) {
-    var material=new THREE.MeshNormalMaterial({
-        linewidth: 0.01,
-        wireframe: true,
-        transparent: true,
-        opacity: 1,
+    var geometry = new THREE.BoxGeometry(boxWidth, boxWidth, boxWidth);
+    var material = new THREE.MeshBasicMaterial({
+      map: texture,
+      color: 0x01BE00,
+      side: THREE.BackSide
     });
-    var mesh=new THREE.Mesh(geometry, material);
-    mesh.name="model"
-    mesh.scale.set(0.3, 0.3, 0.3);
-    mesh.translateY(-1.4)
-    mesh.translateX(0)
-    mesh.translateZ(0)
-    mesh.rotateX(0)
-    mesh.rotateZ(0)
 
-    mesh.material.needsUpdate = true;
-    scene.add(mesh);
-});
-
-// Request animation frame loop function
-var lastRender = 0;
-function animate(timestamp) {
-  var delta = Math.min(timestamp - lastRender, 500);
-  lastRender = timestamp;
-
-
-  // Update VR headset position and apply to camera.
-  controls.update();
-
-  // Render the scene.
-  effect.render(scene, camera);
-
-  // Keep looping.
-  vrDisplay.requestAnimationFrame(animate);
-}
-
-function onResize() {
-  console.log('Resizing to %s x %s.', window.innerWidth, window.innerHeight);
-  effect.setSize(window.innerWidth, window.innerHeight);
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-}
-
-function onVRDisplayPresentChange() {
-  console.log('onVRDisplayPresentChange');
-  onResize();
-}
-
-// Resize the WebGL canvas when we resize and also when we change modes.
-window.addEventListener('resize', onResize);
-window.addEventListener('vrdisplaypresentchange', onVRDisplayPresentChange);
-
-// Button click handlers.
-document.querySelector('button#fullscreen').addEventListener('click', function() {
-  enterFullscreen(renderer.domElement);
-});
-document.querySelector('button#vr').addEventListener('click', function() {
-  vrDisplay.requestPresent([{source: renderer.domElement}]);
-});
-document.querySelector('button#reset').addEventListener('click', function() {
-  vrDisplay.resetPose();
-});
-
-function enterFullscreen (el) {
-  if (el.requestFullscreen) {
-    el.requestFullscreen();
-  } else if (el.mozRequestFullScreen) {
-    el.mozRequestFullScreen();
-  } else if (el.webkitRequestFullscreen) {
-    el.webkitRequestFullscreen();
-  } else if (el.msRequestFullscreen) {
-    el.msRequestFullscreen();
+    var skybox = new THREE.Mesh(geometry, material);
+    scene.add(skybox);
   }
-}
 
-</script>
+  // object
+  var loader = new THREE.STLLoader();
+
+  loader.load( '../assets/model.stl', function ( geometry ) {
+      var material=new THREE.MeshNormalMaterial({
+          linewidth: 0.01,
+          wireframe: true,
+          transparent: true,
+          opacity: 1,
+      });
+      var mesh=new THREE.Mesh(geometry, material);
+      mesh.name="model"
+      mesh.scale.set(0.3, 0.3, 0.3);
+      mesh.translateY(-1.4)
+      mesh.translateX(0)
+      mesh.translateZ(0)
+      mesh.rotateX(0)
+      mesh.rotateZ(0)
+
+      mesh.material.needsUpdate = true;
+      scene.add(mesh);
+  });
+
+  // Request animation frame loop function
+  var lastRender = 0;
+
+  camera.needsUpdate = true;
+
+  camera.position.x = 0
+  camera.position.y = -50
+  camera.position.z = 200
+
+
+///////REnder here
+  function animate(timestamp) {
+    var delta = Math.min(timestamp - lastRender, 500);
+    lastRender = timestamp;
+
+    camera.needsUpdate = true;
+
+
+
+    // if (native.camera.lookAtObj) {
+    //     camera.lookAt(scene.position);
+    // }
+
+    // if ( video.readyState === video.HAVE_ENOUGH_DATA )
+    // {
+    // videoImageContext.drawImage( video, 0, 0 );
+    // if ( videoTexture )
+    //     videoTexture.needsUpdate = true;
+    // }
+    //
+    // if (camera.lookAtObj) {
+    //     camera.lookAt(scene.position);
+    // }
+    //
+    // if (native.camera.stereo){
+    //     stereorender.render( scene, camera);
+    // } else {
+    //    renderer.render(scene, camera);
+    // }
+    //
+
+    // Update VR headset position and apply to camera.
+    controls.update();
+
+    // Render the scene.
+    effect.render(scene, camera);
+
+    // Keep looping.
+    vrDisplay.requestAnimationFrame(animate);
+
+  }
+
+
+
+
+  function onResize() {
+    console.log('Resizing to %s x %s.', window.innerWidth, window.innerHeight);
+    effect.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+  }
+
+  function onVRDisplayPresentChange() {
+    console.log('onVRDisplayPresentChange');
+    onResize();
+  }
+
+  // Resize the WebGL canvas when we resize and also when we change modes.
+  window.addEventListener('resize', onResize);
+  window.addEventListener('vrdisplaypresentchange', onVRDisplayPresentChange);
+
+  // Button click handlers.
+  document.querySelector('button#fullscreen').addEventListener('click', function() {
+    enterFullscreen(renderer.domElement);
+  });
+  document.querySelector('button#vr').addEventListener('click', function() {
+    vrDisplay.requestPresent([{source: renderer.domElement}]);
+  });
+  document.querySelector('button#reset').addEventListener('click', function() {
+    vrDisplay.resetPose();
+  });
+
+  function enterFullscreen (el) {
+    if (el.requestFullscreen) {
+      el.requestFullscreen();
+    } else if (el.mozRequestFullScreen) {
+      el.mozRequestFullScreen();
+    } else if (el.webkitRequestFullscreen) {
+      el.webkitRequestFullscreen();
+    } else if (el.msRequestFullscreen) {
+      el.msRequestFullscreen();
+    }
+  }
+
+  </script>
+
+</body>
 
 </html>

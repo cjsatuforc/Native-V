@@ -193,7 +193,7 @@ vUv = position.xy + vec2( 0.5 / width, 0.5 / height );
 
 vec3 position = ( texture2D( map, vUv ).rgb  );
 
-gl_PointSize = 2.0;
+gl_PointSize = 0.9;
 gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 
 }
@@ -297,7 +297,7 @@ gl_FragColor *= 1.5;
                 "map": { type: "t", value: rtTexturePos },
                 "width": { type: "f", value: texSize },
                 "height": { type: "f", value: texSize },
-                "pointSize": { type: "f", value: 3 },
+                "pointSize": { type: "f", value: 1 },
                 "effector" : { type: "f", value: 0 }
 
             },
@@ -308,7 +308,7 @@ gl_FragColor *= 1.5;
             blending: THREE.AdditiveBlending
         } );
 
-        mesh2 = new THREE.PointCloud( geometry2, material2 );
+        mesh2 = new THREE.Points( geometry2, material2 );
         scene.add( mesh2 );
 
         controls = new THREE.OrbitControls( camera, renderer.domElement );
@@ -318,6 +318,7 @@ gl_FragColor *= 1.5;
         document.body.appendChild(renderer.domElement);
 
     }
+
 
     function animate(t) {
         requestAnimationFrame(animate);

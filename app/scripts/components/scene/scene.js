@@ -54,10 +54,10 @@ function loadModel(){
 
     loader.load( 'assets/model.stl', function ( geometry ) {
         var material = new THREE.MeshNormalMaterial({
-            linewidth: 0.01,
+            linewidth: 0.00001,
             wireframe: true,
             transparent: true,
-            opacity: 1,
+            opacity: 0.5,
         });
         var mesh=new THREE.Mesh(geometry, material);
         mesh.name="model"
@@ -67,7 +67,6 @@ function loadModel(){
         mesh.translateZ(0)
         mesh.rotateX(0)
         mesh.rotateZ(0)
-
         mesh.material.needsUpdate = true;
         scene.add(mesh);
     });
@@ -78,34 +77,102 @@ ipcRenderer.on('updatemodel', function(event, arg) {
     var object = scene.getObjectByName("model");
     scene.remove(object);
     loadModel();
-    console.log('Update?');
 })
 
 
+	//
+	// // create the video element
+	// video = document.createElement( 'video' );
+	// // video.id = 'video';
+	// // video.type = ' video/ogg; codecs="theora, vorbis" ';
+	// video.src = "videos/sintel.ogv";
+	// video.load(); // must call after setting/changing source
+	// video.play();
 
-// loadModel(native.model.file, native.model.scale, native.model.position, native.model.rotation);
-//
-// function loadModel(file, scale, position, rotation){
-//     loader.load( file, function ( geometry ) {
-//         var material=new THREE.MeshNormalMaterial({
-//             linewidth: 0.005,
-//             wireframe: true,
-//             transparent: true,
-//             opacity: 0.7,
-//         });
-//         var mesh=new THREE.Mesh(geometry, material);
-//         mesh.name="model"
-//         mesh.scale.set(scale, scale, scale);
-//         mesh.translateX(position[0])
-//         mesh.translateY(position[1])
-//         mesh.translateZ(position[2])
-//         mesh.rotateX(rotation[0])
-//         mesh.rotateY(rotation[1])
-//         mesh.rotateZ(rotation[2])
-//         mesh.material.needsUpdate = true;
-//         scene.add(mesh);
-//     });
-// }
+
+
+	// alternative method --
+	// create DIV in HTML:
+	// <video id="myVideo" autoplay style="display:none">
+	//		<source src="videos/sintel.ogv" type='video/ogg; codecs="theora, vorbis"'>
+	// </video>
+	// and set JS variable:
+
+
+
+
+    function loadScreen(){
+        var windowObj = scene.getObjectByName("window");
+        var textureObj = scene.getObjectByName("videotexture");
+        scene.remove(windowObj);
+
+        scale = 0.05;
+
+        //Get size
+        var video = document.getElementById( 'video' );
+        video.load();
+        video.addEventListener( "loadedmetadata", function (e) {
+            videoHeight = video.videoHeight;
+            videoWidth = video.videoWidth;
+            movieGeometry = new THREE.PlaneGeometry( videoWidth * scale, videoHeight * scale, 1, 1 );
+            video.play();
+        });
+
+        setupScreen();
+        function setupScreen() {
+
+            videoImage = document.createElement( 'canvas' );
+            videoImage.width = videoWidth;
+            videoImage.height = videoHeight;
+
+            videoImageContext = videoImage.getContext( '2d' );
+            videoImageContext.fillRect( 0, 0, videoWidth, videoHeight );
+
+            videoTexture = new THREE.Texture( videoImage );
+            videoTexture.name = "videotexture"
+            videoTexture.minFilter = THREE.LinearFilter;
+            videoTexture.magFilter = THREE.LinearFilter;
+
+            movieMaterial = new THREE.MeshBasicMaterial( {
+                map: videoTexture,
+                overdraw: true,
+                side:THREE.DoubleSide,
+                opacity: 0.8
+            } );
+            movieMaterial.name = "movieMaterial"
+
+            var movieScreen = new THREE.Mesh( movieGeometry, movieMaterial );
+            movieScreen.position.set(0,0,0);
+            movieScreen.name = "window"
+            scene.add(movieScreen);
+
+            var object = scene.getObjectByName("window");
+            var position = native.desktopWindow.position;
+            var rotation = native.desktopWindow.rotation;
+            object.position.x = position.x;
+            object.position.y = position.y;
+            object.position.z = position.z;
+            object.rotation.x = rotation.x;
+            object.rotation.y = rotation.y;
+            object.rotation.z = rotation.z;
+        }
+    }
+
+    ipcRenderer.on('updatewindow', function(event, arg) {
+        loadScreen();
+    })
+
+    ipcRenderer.on('update-native', function(event, arg) {
+        var object = scene.getObjectByName("window");
+        var position = native.desktopWindow.position;
+        var rotation = native.desktopWindow.rotation;
+        object.position.x = position.x;
+        object.position.y = position.y;
+        object.position.z = position.z;
+        object.rotation.x = rotation.x;
+        object.rotation.y = rotation.y;
+        object.rotation.z = rotation.z;
+    });
 
 
 
@@ -140,7 +207,6 @@ neck = new THREE.Object3D();
 
 
 function viewResize(){
-
         windowHalfX = window.innerWidth / 2;
         windowHalfY = window.innerHeight / 2;
         renderer.setSize( window.innerWidth, window.innerHeight );
@@ -165,15 +231,15 @@ function setRenderer(){
 
         container.appendChild(renderer.domElement);
 
-    if (native.camera.stereo){
-    };
-
-//     var renderer = new THREE.WebGLRenderer();
-// renderer.setSize( width,height);
-// document.body.appendChild( renderer.domElement );
-
     viewResize();
 }
+
+setTimeout(function(){
+    var fluid = document.getElementById("fluid");
+    fluid.className += 'loaded';
+    console.log('anything?');
+}, 3000);
+
 
 
 animate();
@@ -190,6 +256,13 @@ function render(){
     // var faceData = faceData;
     var object = scene.getObjectByName("model");
     object.rotation.y=r*Math.sin(timer);
+
+    if ( video.readyState === video.HAVE_ENOUGH_DATA )
+    {
+    videoImageContext.drawImage( video, 0, 0 );
+    if ( videoTexture )
+        videoTexture.needsUpdate = true;
+    }
 
     if (camera.lookAtObj) {
         camera.lookAt(scene.position);

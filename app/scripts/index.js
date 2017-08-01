@@ -6,32 +6,31 @@ const {desktopCapturer} = require('electron');
 const domify = require('domify')
 
 
-document.onkeydown = function (evt) {
-  evt = evt || window.event
-  // Press esc key.
-  if (evt.keyCode === 27) {
-    ipcRenderer.send('source-id-selected', null)
-  }
-}
-
 ipcRenderer.on('get-sources', (event, options) => {
   desktopCapturer.getSources(options, (error, sources) => {
     if (error) throw error
-    let sourcesList = document.querySelector('.capturer-list')
+    let sourcesList = document.querySelector('.capturer-list');
+    sourcesList.innerHTML = "";
     for (let source of sources) {
       let thumb = source.thumbnail.toDataURL()
       if (!thumb) continue
       let title = source.name.slice(0, 20)
-      let item = `<li><a href="#"><img src="${thumb}"><span>${title}</span></a></li>`
+    //   let item = `<li><a href="#"><img src="${thumb}"><span>${title}</span></a></li>`
+      let item = `<li><a href="#"><span>${title}</span></a></li>`
       sourcesList.appendChild(domify(item))
     }
-    let links = sourcesList.querySelectorAll('a')
+    let links = sourcesList.querySelectorAll('a');
     for (let i = 0; i < links.length; ++i) {
+
+     if (sources[i].name == 'Autodesk Fusion 360') {
+       ipcRenderer.send('source-id-selected', sources[i].id);
+     }
+
+      // on click
       let closure = (i) => {
         return (e) => {
           e.preventDefault()
           ipcRenderer.send('source-id-selected', sources[i].id)
-          sourcesList.innerHTML = ''
         }
       }
       links[i].onclick = closure(i)
@@ -41,13 +40,6 @@ ipcRenderer.on('get-sources', (event, options) => {
 
 
 let localStream
-let microAudioStream
-let recordedChunks = []
-let numRecordedChunks = 0
-let recorder
-let includeMic = false
-// let includeSysAudio = false
-
 
 const playVideo = () => {
   remote.dialog.showOpenDialog({properties: ['openFile']}, (filename) => {
@@ -58,24 +50,24 @@ const playVideo = () => {
   })
 }
 
-// ipcRenderer.send('show-picker', { types: ['window'] })
-ipcRenderer.send('show-picker', { types: ['screen'] })
+// ipcRenderer.send('show-picker', { types: ['screen'] })
+ipcRenderer.send('show-picker', { types: ['window'] })
 
+ipcRenderer.on('fusionConnected', (event, sourceId) => {
+    ipcRenderer.send('show-picker', { types: ['window'] })
+})
 
 ipcRenderer.on('source-id-selected', (event, sourceId) => {
-  // Users have cancel the picker dialog.
   if (!sourceId) return
   console.log(sourceId)
   onAccessApproved(sourceId)
 })
 
 const recordDesktop = () => {
-  cleanRecord()
   ipcRenderer.send('show-picker', { types: ['screen'] })
 }
 
 const recordWindow = () => {
-  cleanRecord()
   ipcRenderer.send('show-picker', { types: ['window'] })
 }
 
@@ -92,22 +84,8 @@ const getMediaStream = (stream) => {
   video.src = URL.createObjectURL(stream)
   localStream = stream
   stream.onended = () => { console.log('Media stream ended.') }
-
   let videoTracks = localStream.getVideoTracks()
-
-  try {
-    console.log('Start recording the stream.')
-    recorder = new MediaRecorder(stream)
-  } catch (e) {
-    console.assert(false, 'Exception while creating MediaRecorder: ' + e)
-    return
-  }
-
-  recorder.ondataavailable = recorderOnDataAvailable
-  recorder.onstop = () => { console.log('recorderOnStop fired') }
-  recorder.start()
-  console.log('Recorder is started.')
-  disableButtons()
+  httpGet('updatewindow');
 }
 
 const getUserMediaError = () => {
@@ -125,13 +103,11 @@ const onAccessApproved = (id) => {
     video: { mandatory: { chromeMediaSource: 'desktop', chromeMediaSourceId: id,
       maxWidth: window.screen.width, maxHeight: window.screen.height } }
   }, getMediaStream, getUserMediaError)
+
 }
 
 
-
-
 function boot() {
-
     angular
         .module('app')
 
@@ -149,11 +125,12 @@ var interval = setInterval(function() {
 
 document.addEventListener('DOMContentLoaded', boot);
 
+
+
 var localstorage = window.localStorage;
 
+localStorage.clear(); ///TEMPORARY
 
-
-// Uncoment for prod
 if (localstorage.native === undefined || localstorage.native === null || localstorage.native.length === 0){
     var native = native;
     localstorage.setItem('native', JSON.stringify(native));
@@ -161,13 +138,22 @@ if (localstorage.native === undefined || localstorage.native === null || localst
     var native = JSON.parse(localStorage.getItem("native"));
 }
 
-
 ipcRenderer.on('update-native', function(event, arg) {
     native = arg;
     var localstorage = window.localStorage;
     localStorage.clear();
     localstorage.setItem('native', JSON.stringify(native));
 });
+
+
+function httpGet(request) {
+    var url = "http://localhost:3000/";
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", url + request, false );
+    xmlHttp.send ( null );
+    return xmlHttp.responseText;
+}
+
 
 
 //AUTODESK FUSION HANDLERS

@@ -17,8 +17,8 @@ var mb = menubar({
     index: 'file://' + __dirname + '/settings.html',
     icon:  'file://' + __dirname + '/assets/IconTemplate.png',
     tooltip: 'Native',
-    width: 300,
-    height: 600,
+    width: 600,
+    height: 400,
     showDockIcon: true,
     transparent: true,
     frame: true,
@@ -70,8 +70,8 @@ app.on('ready', function() {
     logger.debug("Starting application");
 
     var mainWindow = new BrowserWindow({
-        width: 340,
-        height: 200,
+        width: 600,
+        height: 400,
         toolbar: false,
         title: "Electron",
         transparent: true,
@@ -92,8 +92,6 @@ app.on('ready', function() {
     mainWindow.on('closed', function() {
         mainWindow = null;
     });
-
-
 
 
     var prefsWindow = new BrowserWindow({
@@ -152,11 +150,27 @@ app.on('ready', function() {
             prefsWindow.webContents.send('update-camera', arg);
     });
 
+    //receive Window and send back
+    ipcMain.on('send-window', function(event, arg) {
+            mainWindow.webContents.send('update-window', arg);
+            prefsWindow.webContents.send('update-window', arg);
+    });
+
     //ipcMain receive scope from Angular and send it back to mainview's ipcRenderer
     ipcMain.on('http-get', function(event, arg) {
             mainWindow.webContents.send('http-get', arg);
             prefsWindow.webContents.send('http-get', arg);
     });
+
+    ipcMain.on('source-id-selected', (event, sourceId) => {
+        mainWindow.webContents.send('source-id-selected', sourceId)
+    })
+
+    ipcMain.on('show-picker', (event, options) => {
+       prefsWindow.webContents.send('get-sources', options)
+
+    })
+
 
     //Setup express server for api
     const express = require('express');
@@ -181,13 +195,26 @@ app.on('ready', function() {
         res.send(null);
     });
 
+    api.get('/mini-preview', function(req, res) {
+        mainWindow.setSize(340, 200);
+        mainWindow.webContents.send('update-native', arg);
+        res.send(null); // send Null back to end request
+    });
+
     api.get('/updatemodel', function(req, res) {
         mainWindow.webContents.send('updatemodel');
         res.send(null); // send Null back to end request
     });
 
+    api.get('/updatewindow', function(req, res) {
+        mainWindow.webContents.send('updatewindow');
+        res.send(null); // send Null back to end request
+    });
+
     api.get('/fusion-connected', function(req, res) {
         mainWindow.webContents.send('fusionConnected');
+        // mainWindow.webContents.send('get-sources');
+        // mainWindow.webContents.send('updatewindow');
         res.send(null); // send Null back to end request
     });
 
@@ -203,15 +230,16 @@ app.on('ready', function() {
     });
 
     api.listen(3000, function () {
-      console.log('Example app listening on port 3000!')
+      console.log('Api is on port 3000!')
     });
 
-    ipcMain.on('source-id-selected', (event, sourceId) => {
-        mainWindow.webContents.send('source-id-selected', sourceId)
-    })
 
-    ipcMain.on('show-picker', (event, options) => {
-      prefsWindow.webContents.send('get-sources', options)
-    })
+    api.get('/gyro/:data', function(req, res) {
+
+        console.log('epta')
+
+        res.send(null); // send Null back to end request
+    });
+
 
 });

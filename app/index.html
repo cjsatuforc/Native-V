@@ -32,6 +32,9 @@
 
 	<script src="scripts/components/webvr/js/webvr-polyfill.js"></script>
 
+
+	<script type="text/javascript" src="scripts/native.js"></script>
+
 	<!--Initial Setup-->
 	<script type="text/javascript" src="scripts/index.js"></script>
 
@@ -41,11 +44,11 @@
 	<!--Material configs (for now)-->
 	<script type="text/javascript" src="scripts/app/config.js"></script>
 
-	<!-- <script src="scripts/components/computerVision/brf/libs/createjs/preloadjs-0.6.2.min.js"></script>
-	<script src="scripts/components/computerVision/brf/BRFv4Demo.js"></script> -->
+	<script src="scripts/components/computerVision/brf/libs/createjs/preloadjs-0.6.2.min.js"></script>
+	<script src="scripts/components/computerVision/brf/BRFv4Demo.js"></script>
 
 </head>
-<body>
+<body ng-controller="ViewController as scope">
 
 	<div class="wtf">
 	<video id="video" autoplay></video>
@@ -54,7 +57,9 @@
 
 <script>
 
-	window.onload = brfv4Example.start();
+	if (native.headtracking.active){
+		window.onload = brfv4Example.start();
+	}
 
     const {Menu, MenuItem} = remote
     const menu = new Menu()
@@ -98,7 +103,7 @@
 
 	<script src="scripts/components/scene/scene.js"></script>
 
-	<iframe src="fluid.html" ng-show="native.fluid"></iframe>
+	<iframe id="fluid" src="fluid.html" ng-show="native.fluid"></iframe>
 
 	<div class="debug" ng-if="native.debuger" style="display: flex; width: 400px; flex-direction: column; position: fixed; bottom: 0; left:0;">
 		<span> {{ native }} </span>
