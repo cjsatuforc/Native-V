@@ -48,8 +48,9 @@ neck.rotation._x = 200;  // X second
 // object
 var loader = new THREE.STLLoader();
 
+
 loader.load( 'assets/model.stl', function ( geometry ) {
-    var material=new THREE.MeshNormalMaterial({
+    var material = new THREE.MeshNormalMaterial({
         linewidth: 0.01,
         wireframe: true,
         transparent: true,

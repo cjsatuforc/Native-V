@@ -42,3 +42,7 @@ ipcRenderer.on('update-native', function(event, arg) {
     localStorage.clear();
     localstorage.setItem('native', JSON.stringify(native));
 });
+
+ipcRenderer.on('update', function(event, arg) {
+    location.reload();
+})

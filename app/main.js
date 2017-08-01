@@ -43,17 +43,27 @@ app.commandLine.appendSwitch('--enable-experimental-web-platform-features')
 app.commandLine.appendSwitch('--enable-webvr')
 app.commandLine.appendSwitch('--enable-gamepad-extensions')
 
-
+// protocol.registerStandardSchemes(['native'])
 
 app.on('ready', function() {
 
-    //
+
     // protocol.registerBufferProtocol('native', (request, callback) => {
     //   callback({mimeType: 'text/html', data: Buffer.from('<h5>Response</h5>')});
     //   console.error('norm')
     // }, (error) => {
     //   if (error) console.error('Failed to register protocol')
     // })
+
+    protocol.registerHttpProtocol('native', (request, callback) => {
+        console.log("HELLO WORLD");
+        console.log(request, callback);
+        const url = request.url.substr(7)
+        callback({path: path.normalize(`${__dirname}/${url}`)})
+      }, (error) => {
+        if (error) console.error(error)
+      })
+
 
 
     logger.debug("Starting application");
@@ -99,7 +109,7 @@ app.on('ready', function() {
 
 
     mainWindow.openDevTools();
-    prefsWindow.openDevTools();
+    // prefsWindow.openDevTools();
 
     prefsWindow.loadURL('file://' + __dirname + '/settings.html');
 
@@ -145,4 +155,32 @@ app.on('ready', function() {
             prefsWindow.webContents.send('update-camera', arg);
     });
 
+    const express = require('express');
+    const bodyParser = require('body-parser');
+
+
+    const exp = express();
+    exp.use(bodyParser.json({ limit: '50mb' }))
+
+    exp.get('/', function (req, res) {
+        res.send(null);
+        res.send(null);
+    })
+
+    exp.get('/setting', function(req, res) {
+        if (prefsWindow.isVisible())
+            prefsWindow.hide()
+        else
+            prefsWindow.show()
+        res.send(null);
+    });
+
+    exp.get('/update', function(req, res) {
+        mainWindow.webContents.send('update');
+        res.send(null);
+    });
+
+    exp.listen(3000, function () {
+      console.log('Example app listening on port 3000!')
+    })
 });
