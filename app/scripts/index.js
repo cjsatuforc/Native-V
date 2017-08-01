@@ -43,6 +43,13 @@ ipcRenderer.on('update-native', function(event, arg) {
     localstorage.setItem('native', JSON.stringify(native));
 });
 
-ipcRenderer.on('update', function(event, arg) {
-    location.reload();
+
+//AUTODESK FUSION HANDLERS
+
+ipcRenderer.on('fusionConnected', function(event, arg) {
+    new Notification('Native', {body: 'Autodesk Fusion Connected'})
+})
+
+ipcRenderer.on('fusionDisconnected', function(event, arg) {
+    new Notification('Native', {body: 'Autodesk Fusion Disconnected'})
 })

@@ -48,26 +48,39 @@ neck.rotation._x = 200;  // X second
 // object
 var loader = new THREE.STLLoader();
 
+loadModel();
 
-loader.load( 'assets/model.stl', function ( geometry ) {
-    var material = new THREE.MeshNormalMaterial({
-        linewidth: 0.01,
-        wireframe: true,
-        transparent: true,
-        opacity: 1,
+function loadModel(){
+
+    loader.load( 'assets/model.stl', function ( geometry ) {
+        var material = new THREE.MeshNormalMaterial({
+            linewidth: 0.01,
+            wireframe: true,
+            transparent: true,
+            opacity: 1,
+        });
+        var mesh=new THREE.Mesh(geometry, material);
+        mesh.name="model"
+        mesh.scale.set(0.3, 0.3, 0.3);
+        mesh.translateY(-1.4)
+        mesh.translateX(0)
+        mesh.translateZ(0)
+        mesh.rotateX(0)
+        mesh.rotateZ(0)
+
+        mesh.material.needsUpdate = true;
+        scene.add(mesh);
     });
-    var mesh=new THREE.Mesh(geometry, material);
-    mesh.name="model"
-    mesh.scale.set(0.3, 0.3, 0.3);
-    mesh.translateY(-1.4)
-    mesh.translateX(0)
-    mesh.translateZ(0)
-    mesh.rotateX(0)
-    mesh.rotateZ(0)
 
-    mesh.material.needsUpdate = true;
-    scene.add(mesh);
-});
+}
+
+ipcRenderer.on('updatemodel', function(event, arg) {
+    var object = scene.getObjectByName("model");
+    scene.remove(object);
+    loadModel();
+    console.log('Update?');
+})
+
 
 
 // loadModel(native.model.file, native.model.scale, native.model.position, native.model.rotation);

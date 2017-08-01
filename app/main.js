@@ -3,6 +3,7 @@ if(require('electron-squirrel-startup')) return;
 const electron = require('electron');
 const {app} = electron;
 const {BrowserWindow} = electron;
+const {Notification} = electron;
 const {ipcMain} = electron;
 const {protocol} = require('electron');
 
@@ -69,8 +70,8 @@ app.on('ready', function() {
     logger.debug("Starting application");
 
     var mainWindow = new BrowserWindow({
-        width: 950,
-        height: 550,
+        width: 340,
+        height: 200,
         toolbar: false,
         title: "Native",
         transparent: true,
@@ -78,9 +79,9 @@ app.on('ready', function() {
         titleBarStyle: 'hidden-inset',
         vibrancy: 'dark',
         x: 1500,
-        y: 0,
+        y: 1000,
         show: true,
-        // alwaysOnTop: true
+        alwaysOnTop: true
     });
 
     mainWindow.loadURL('file://' + __dirname + "/index.html");
@@ -155,19 +156,19 @@ app.on('ready', function() {
             prefsWindow.webContents.send('update-camera', arg);
     });
 
+
+    //Setup express server
     const express = require('express');
     const bodyParser = require('body-parser');
 
+    const api = express();
+    api.use(bodyParser.json({ limit: '50mb' }))
 
-    const exp = express();
-    exp.use(bodyParser.json({ limit: '50mb' }))
-
-    exp.get('/', function (req, res) {
-        res.send(null);
+    api.get('/', function (req, res) {
         res.send(null);
     })
 
-    exp.get('/setting', function(req, res) {
+    api.get('/setting', function(req, res) {
         if (prefsWindow.isVisible())
             prefsWindow.hide()
         else
@@ -175,12 +176,23 @@ app.on('ready', function() {
         res.send(null);
     });
 
-    exp.get('/update', function(req, res) {
-        mainWindow.webContents.send('update');
-        res.send(null);
+    api.get('/updatemodel', function(req, res) {
+        mainWindow.webContents.send('updatemodel');
+        res.send(null); // send Null back to end request
     });
 
-    exp.listen(3000, function () {
+    api.get('/fusion-connected', function(req, res) {
+        mainWindow.webContents.send('fusionConnected');
+        res.send(null); // send Null back to end request
+    });
+
+    api.get('/fusion-disconnected', function(req, res) {
+        mainWindow.webContents.send('fusionDisconnected');
+        res.send(null); // send Null back to end request
+    });
+
+
+    api.listen(3000, function () {
       console.log('Example app listening on port 3000!')
     })
 });
