@@ -7,8 +7,6 @@ var fs = require('fs');
 var http    = require('http');
 
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-// var xhr = new XMLHttpRequest();
-
 
 // var io = require('socket.io')(server);
 var port = process.env.PORT || 8080;
@@ -36,16 +34,8 @@ serialport.on('open', function(){
     });
 });
 
-// function httpGet(request) {
-//     var url = "http://localhost:3000/gyro/";
-//     var xmlHttp = new XMLHttpRequest();
-//     xmlHttp.open( "GET", url + request, false );
-//     xmlHttp.send ( null );
-//     return xmlHttp.responseText;
-// }
-
 function httpGet(request) {
-    var url = "http://localhost:3000/gyro";
+    var url = "http://localhost:3000/gyro?parameter=";
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", url + request, false );
     xmlHttp.send ( null );
