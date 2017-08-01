@@ -4,9 +4,9 @@
   "productName": "NativeView",
   "description": "Augmented Reality Renderer",
   "scripts": {
-    "start": "electron ./app --enable-logging --remote-debugging-port=9222",
+    "start": "electron ./app",
     "dev": "NODE_ENV='development' npm run start",
-    "webserver" : "server.js",
+    "webserver": "server.js",
     "clean": "rm -rf ./dist",
     "install": "electron-rebuild",
     "clean:osx": "rm -rf ./dist/osx",
@@ -68,6 +68,7 @@
     }
   },
   "dependencies": {
+    "body-parser": "^1.17.2",
     "browser-window": "^0.4.0",
     "electron-vibrancy": "^0.1.3",
     "express": "^4.15.3",

@@ -294,24 +294,30 @@ function run(context) {
             // ui.messageBox(locStrings.demoButtonAddedToPanel);
         }
 
+        function httpGet(theUrl)
+        {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+            xmlHttp.send( null );
+            return xmlHttp.responseText;
+        }
+
         var NativeButtonClickEvent = function(){
-            ui.messageBox('try');
-            
+
             var app = adsk.core.Application.get();
             var product = app.activeProduct;
             var design = adsk.fusion.Design(product);
-            ui.messageBox('try');
             var exportMgr = design.exportManager;
-            var tmpDir = '/Users/alexturin/projects/Native-V/app/assets/';
-            ui.messageBox('try');
+            var tmpDir = '/Users/alexandertyurin/projects/Native-V/app/assets';
             var stlOptions = exportMgr.createSTLExportOptions(design.rootComponent, tmpDir + 'model.stl');
             stlOptions.isBinaryFormat = true;
-            ui.messageBox('try');
             stlOptions.meshRefinement = adsk.fusion.MeshRefinementSettings.MeshRefinementHigh;
             var res;
             res = exportMgr.execute(stlOptions);
 
-            ui.messageBox('Completed exporting all file formats intoooooo ' + tmpDir);
+            httpGet("http://localhost:3000/update");
+
+            ui.messageBox('Completed exporting all file formats into ' + tmpDir);
         }
 
 
