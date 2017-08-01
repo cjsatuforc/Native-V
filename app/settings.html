@@ -101,9 +101,13 @@
 								Preview
 							</md-switch>
 
-							<md-button ng-click="enterVR();">
+							<md-switch ng-model="native.fluid" ng-change="sendNative();">
+								Fluid
+							</md-switch>
+
+							<!-- <md-button ng-click="enterVR();">
 							 <i class="icon">EnterVR</i>
-						   </md-button>
+						   </md-button> -->
 
                     </md-tab>
 

@@ -5,9 +5,10 @@
   "description": "Augmented Reality Renderer",
   "scripts": {
     "start": "electron ./app --enable-logging --remote-debugging-port=9222",
-    "server": "electron ./app/server.js",
     "dev": "NODE_ENV='development' npm run start",
+    "webserver" : "server.js",
     "clean": "rm -rf ./dist",
+    "install": "electron-rebuild",
     "clean:osx": "rm -rf ./dist/osx",
     "clean:win": "rm -rf ./dist/win",
     "dist": "build -mwl --x64 --ia32",
@@ -24,7 +25,8 @@
     "build:osx": "npm run pack:osx && electron-builder \"dist/osx/Native-darwin-x64/Native.app\" --platform=osx --out=\"dist/osx\" --config=builder.json",
     "deploy": "PACKAGE_VERSION=$(cat app/package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && aws s3 sync release/ s3://eatodo/updates/$PACKAGE_VERSION/ --acl public-read && aws s3 sync s3://eatodo/updates/$PACKAGE_VERSION/ s3://eatodo/updates/latest/ --delete --acl public-read",
     "all": "run-s dist release deploy",
-    "reload": "live-reload app --port 35729"
+    "reload": "live-reload app --port 35729",
+    "postinstall": "cd node_modules/serialport && ./node_modules/.bin/node-pre-gyp rebuild --target=1.7.5 --arch=x64 --dist-url=https://atom.io/download/atom-shell"
   },
   "author": "Alexander Turin",
   "devDependencies": {
@@ -32,7 +34,8 @@
     "electron": "^1.7.5",
     "electron-builder": "^5.35.0",
     "electron-packager": "^8.7.2",
-    "electron-prebuilt": "~1.2.X",
+    "electron-prebuilt": "^1.4.13",
+    "electron-rebuild": "^1.6.0",
     "live-reload": "~1.1.0",
     "mkdirp": "~0.5.1",
     "npm-run-all": "~2.3.0",
@@ -71,9 +74,11 @@
     "hat": "0.0.3",
     "ipc": "0.0.1",
     "menubar": "^5.2.3",
+    "serialport": "^4.0.7",
+    "serialport-electron": "^1.7.4-temp",
     "socket.io": "^2.0.3",
     "three": "^0.86.0",
-    "vtk.js": "^3.0.5",
+    "vtk.js": "^3.0.6",
     "webvr-polyfill": "^0.9.36"
   }
 }

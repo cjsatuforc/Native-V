@@ -68,9 +68,6 @@ loader.load( 'assets/model.stl', function ( geometry ) {
     scene.add(mesh);
 });
 
-ipcRenderer.on('update-model', function(event, arg) {
-    console.log(arg);
-});
 
 // loadModel(native.model.file, native.model.scale, native.model.position, native.model.rotation);
 //

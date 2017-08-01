@@ -10,7 +10,6 @@ const os = require('os');
 var path = require('path')
 var fs = require('fs');
 
-
 //Menubar
 var menubar = require('menubar')
 var mb = menubar({
@@ -48,7 +47,7 @@ app.commandLine.appendSwitch('--enable-gamepad-extensions')
 
 app.on('ready', function() {
 
-    // 
+    //
     // protocol.registerBufferProtocol('native', (request, callback) => {
     //   callback({mimeType: 'text/html', data: Buffer.from('<h5>Response</h5>')});
     //   console.error('norm')
