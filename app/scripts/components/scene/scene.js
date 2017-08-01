@@ -14,7 +14,6 @@ scene=new THREE.Scene();
 
 camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 10000);
 
-
 neck = new THREE.Object3D();
 neck.up = new THREE.Vector3(0, 0, 1);
 neck.position.z = 1;
