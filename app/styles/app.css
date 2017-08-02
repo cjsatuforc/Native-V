@@ -21,6 +21,11 @@ html, body {
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   /*-webkit-app-region: drag;*/
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select:none;
+  user-select:none;
+  -o-user-select:none;
 }
 
 body.settings{
@@ -161,6 +166,7 @@ md-tab-content{
     width: 100%;
     background: rgba(255, 255, 255, 0.15);
     margin: 0;
+    margin-top: 8px;
 }
 
 .capturer-list{

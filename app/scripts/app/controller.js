@@ -1,13 +1,6 @@
-//Recieve updted camera and apply to existing
-ipcRenderer.on('update-camera', function(event, arg) {
-    camera.position.x = arg.position.x;
-    camera.position.y = arg.position.y;
-    camera.position.z = arg.position.z;
-    camera.rotation.x = arg.rotation.x;
-    camera.rotation.y = arg.rotation.y;
-    camera.rotation.z = arg.rotation.z;
-    camera.lookAtObj = arg.lookAtObj;
-});
+
+
+
 
 //Recieve updted scope
 ipcRenderer.on('update-native', function(event, arg) {
@@ -99,28 +92,28 @@ ipcRenderer.on('update-native', function(event, arg) {
 
 
 function getFace(facos){
-    // data = facos[0];
-    // native.headtracking.head.position.x = data.translationX;
-    // native.headtracking.head.position.y = data.translationY;
-    // native.headtracking.head.rotation.x = data.rotationX;
-    // native.headtracking.head.rotation.y = data.rotationY;
-    // native.headtracking.head.rotation.z = data.rotationZ;
-    // native.headtracking.head.scale = data.scale;
-    // ipcRenderer.send('send-native', native);
+    data = facos[0];
+    native.headtracking.head.position.x = data.translationX;
+    native.headtracking.head.position.y = data.translationY;
+    native.headtracking.head.rotation.x = data.rotationX;
+    native.headtracking.head.rotation.y = data.rotationY;
+    native.headtracking.head.rotation.z = data.rotationZ;
+    native.headtracking.head.scale = data.scale;
+    ipcRenderer.send('send-native', native);
 }
 
 function getSmile(smileFactor){
-//     if (smileFactor > 0.6){
-//         native.headtracking.head.smile = true;
-//     } else {
-//         native.headtracking.head.smile = false;
-//     }
-//
+    if (smileFactor > 0.6){
+        native.headtracking.head.smile = true;
+    } else {
+        native.headtracking.head.smile = false;
+    }
+
 }
 
-
+//
 // function streamData(Data){
-//     if (settings.eyetracking){
+//     if (native.eyetracking){
 //         var pointer = document.getElementById('pointer');
 //         var faceData = Data;
 //         var gaze = faceData.getGazeDirectionGlobal();

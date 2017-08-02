@@ -17,8 +17,8 @@ var mb = menubar({
     index: 'file://' + __dirname + '/settings.html',
     icon:  'file://' + __dirname + '/assets/IconTemplate.png',
     tooltip: 'Native',
-    width: 600,
-    height: 400,
+    width: 300,
+    height: 600,
     showDockIcon: true,
     transparent: true,
     frame: true,
@@ -70,7 +70,7 @@ app.on('ready', function() {
     logger.debug("Starting application");
 
     var mainWindow = new BrowserWindow({
-        width: 600,
+        width: 750,
         height: 400,
         toolbar: false,
         title: "Electron",
@@ -86,7 +86,6 @@ app.on('ready', function() {
     });
 
     mainWindow.loadURL('file://' + __dirname + "/index.html");
-    // mainWindow.loadURL('file://' + __dirname + "/scripts/components/webvr/index.html");
 
 
     mainWindow.on('closed', function() {
@@ -198,6 +197,11 @@ app.on('ready', function() {
     api.get('/mini-preview', function(req, res) {
         mainWindow.setSize(340, 200);
         mainWindow.webContents.send('update-native', arg);
+        res.send(null); // send Null back to end request
+    });
+
+    api.get('/loadmodel', function(req, res) {
+        mainWindow.webContents.send('loadmodel');
         res.send(null); // send Null back to end request
     });
 

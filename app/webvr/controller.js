@@ -1,3 +1,6 @@
+
+
+
 //Recieve updted camera and apply to existing
 ipcRenderer.on('update-camera', function(event, arg) {
     camera.position.x = arg.position.x;
@@ -14,6 +17,7 @@ ipcRenderer.on('update-native', function(event, arg) {
     native = arg;
 });
 
+var native = native;
 
 (function(){
     angular

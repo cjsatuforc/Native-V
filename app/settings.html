@@ -99,17 +99,11 @@
 								Debuger
 							</md-switch>
 
-							<md-switch ng-model="native.preview" ng-change="togglePreview(this.value);">
-								Preview
-							</md-switch>
-
 							<md-switch ng-model="native.fluid" ng-change="sendNative();">
 								Fluid
 							</md-switch>
 
-							<!-- <md-button ng-click="enterVR();">
-							 <i class="icon">EnterVR</i>
-						   </md-button> -->
+
 
                     </md-tab>
 
@@ -124,6 +118,9 @@
 									</md-option>
 								</md-select>
 							</md-input-container>
+
+							<md-button ng-click="HttpGet('loadmodel');">Load Test model
+						   </md-button>
 
 							<!-- <md-slider-container>
 								<span>Pitch </span>
