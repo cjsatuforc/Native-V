@@ -156,15 +156,18 @@ ipcRenderer.on('updatewindow', function(event, arg) {
     console.log('window update triggered');
 })
 
+
 ipcRenderer.on('update-native', function(event, arg) {
-    var object = scene.getObjectByName("window");
-    if (object != 'undefined') {
-        object.position.x = native.desktopWindow.position.x;
-        object.position.y = native.desktopWindow.position.y;
-        object.position.z = native.desktopWindow.position.z;
-        object.rotation.x = native.desktopWindow.rotation.x;
-        object.rotation.y = native.desktopWindow.rotation.y;
-        object.rotation.z = native.desktopWindow.rotation.z;
+    var desktopWindow = native.desktopWindow;
+    var desktopWindowName = scene.getObjectByName("window");
+
+    if (desktopWindowName !== "undefined") {
+        desktopWindowName.position.x = desktopWindow.position.x;
+        desktopWindowName.position.y = desktopWindow.position.y;
+        desktopWindowName.position.z = desktopWindow.position.z;
+        desktopWindowName.rotation.x = desktopWindow.rotation.x;
+        desktopWindowName.rotation.y = desktopWindow.rotation.y;
+        desktopWindowName.rotation.z = desktopWindow.rotation.z;
     }
 });
 
