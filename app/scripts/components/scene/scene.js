@@ -59,10 +59,17 @@ var loader = new THREE.STLLoader();
 
 ipcRenderer.on('loadmodel', function(event, arg) {
     loadModel();
-    animate();
+    var material = scene.getObjectByName("material");
 });
 
+// loadModel();
+
+var modelLoaded = false;
+
 function loadModel(){
+    var object = scene.getObjectByName("model");
+    scene.remove(object);
+
     loader.load( 'assets/model.stl', function ( geometry ) {
         var material = new THREE.MeshNormalMaterial({
             linewidth: 0.01,
@@ -71,6 +78,7 @@ function loadModel(){
             transparent: true,
             opacity: 0.3,
         });
+        material.name="material"
         var mesh=new THREE.Mesh(geometry, material);
         mesh.name="model"
         mesh.scale.set(0.3, 0.3, 0.3);
@@ -82,6 +90,7 @@ function loadModel(){
         mesh.material.needsUpdate = true;
         scene.add(mesh);
     });
+    modelLoaded = true;
 }
 
 ipcRenderer.on('updatemodel', function(event, arg) {
@@ -144,22 +153,19 @@ ipcRenderer.on('updatemodel', function(event, arg) {
 
 ipcRenderer.on('updatewindow', function(event, arg) {
     loadScreen();
+    console.log('window update triggered');
 })
 
 ipcRenderer.on('update-native', function(event, arg) {
     var object = scene.getObjectByName("window");
-    var windowDesk = native.desktopWindow;
-    var position = windowDesk.position;
-    var rotation = windowDesk.rotation;
     if (object != 'undefined') {
-        object.position.x = position.x;
-        object.position.y = position.y;
-        object.position.z = position.z;
-        object.rotation.x = rotation.x;
-        object.rotation.y = rotation.y;
-        object.rotation.z = rotation.z;
+        object.position.x = native.desktopWindow.position.x;
+        object.position.y = native.desktopWindow.position.y;
+        object.position.z = native.desktopWindow.position.z;
+        object.rotation.x = native.desktopWindow.rotation.x;
+        object.rotation.y = native.desktopWindow.rotation.y;
+        object.rotation.z = native.desktopWindow.rotation.z;
     }
-
 });
 
 
@@ -180,13 +186,13 @@ function onTextureLoaded(texture) {
     var material = new THREE.MeshBasicMaterial({
         map: texture,
         transparent: true,
-        opacity: 0.4,
+        opacity: 1,
         color: 0x0B5394,
         side: THREE.BackSide
     });
 
     var skybox = new THREE.Mesh(geometry, material);
-    scene.add(skybox);
+    // scene.add(skybox);
     skybox.scale.set(40, 40, 40);
 }
 
@@ -228,7 +234,7 @@ setTimeout(function(){
     console.log('anything?');
 }, 3000);
 
-
+// loadModel();
 animate();
 
 function animate(){
@@ -243,9 +249,9 @@ function render(){
     // var faceData = faceData;
 
     var object = scene.getObjectByName("model");
-    // if (object =! 'undefined'){
+    if (modelLoaded == true){
         object.rotation.y=r*Math.sin(timer);
-    // }
+    }
 
     if ( video.readyState === video.HAVE_ENOUGH_DATA )
     {

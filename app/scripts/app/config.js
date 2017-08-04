@@ -1,38 +1,3 @@
-(function() {
-
-	angular
-		.module('app')
-		.config(['$mdThemingProvider', configure]);
-
-
-	function configure($mdThemingProvider) {
-        // Configure a dark theme with primary foreground yellow
-        $mdThemingProvider
-            .theme('docs-dark', 'default')
-            .primaryPalette('yellow')
-            .dark()
-            .foregroundPalette['3'] = 'yellow';
-
-    }
-
-
-})();
-
-
-(function() {
-
-    angular
-        .module('app')
-        .config(['$mdAriaProvider', configureAria]);
-
-    function configureAria($mdAriaProvider) {
-        $mdAriaProvider.disableWarnings();
-
-    }
-
-})();
-
-
 //creating empty set of objects
 var native;
 var camera;
@@ -41,8 +6,8 @@ var models;
 native = {
     camera: {
         position: {
-            x: 0,
-            y: 0,
+            x: -100,
+            y: 100,
             z: 200,
         },
         rotation: {

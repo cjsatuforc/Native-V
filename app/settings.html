@@ -24,16 +24,14 @@
 		var STLLoader = require('../node_modules/three/examples/js/loaders/STLLoader.js').join
 	</script> -->
 
-	<script type="text/javascript" src="scripts/native.js"></script>
+
+	<script type="text/javascript" src="scripts/app/config.js"></script>
 
 	<!--Initial Setup-->
 	<script type="text/javascript" src="scripts/index.js"></script>
 
 	<!--View Controller-->
 	<script type="text/javascript" src="scripts/app/controller.js"></script>
-
-	<!--Material configs (for now)-->
-	<script type="text/javascript" src="scripts/app/config.js"></script>
 
 	<script src="http://localhost:35729/livereload.js"></script>
 
@@ -73,14 +71,14 @@
                                 </md-select>
                             </md-input-container> -->
 
-							<md-input-container>
+							<!-- <md-input-container>
 								<label>Visualisation</label>
 								<md-select ng-model="native.visualisation.selected" ng-change="sendNative()">
 									<md-option ng-repeat="type in native.visualisation.types" ng-value="type">
 										{{ type }}
 									</md-option>
 								</md-select>
-							</md-input-container>
+							</md-input-container> -->
 
 
                             <md-switch ng-model="native.headtracking.active" ng-change="sendNative()">
@@ -95,13 +93,20 @@
 								Stereo
 							</md-switch>
 
-							<md-switch ng-model="native.debuger" ng-change="sendNative();">
+							<md-switch ng-model="native.debuger" ng-change="sendNative()" ng-update="saveConfigs()">
 								Debuger
 							</md-switch>
 
 							<md-switch ng-model="native.fluid" ng-change="sendNative();">
 								Fluid
 							</md-switch>
+
+							<md-button ng-click="HttpGet('loadmodel');">Load Test model</md-button>
+
+						   	<md-button ng-click="HttpGet('open-preview');">Open Preview </md-button>
+
+						  	<md-button ng-click="HttpGet('open-dev-tools')">Open Dev Tools</md-button>
+
 
 
 
@@ -110,17 +115,16 @@
 					<md-tab label="Model"><md-tab-label><i class="icon">3d_rotation</i></md-tab-label>
 						<md-tab-body>
 
-							<md-input-container>
+							<!-- <md-input-container>
 								<label>Model</label>
 								<md-select ng-model="native.model.selected" ng-change="sendNative(); updateModel();">
 									<md-option ng-repeat="model in native.models" ng-value="model">
 										{{ model.file }}
 									</md-option>
 								</md-select>
-							</md-input-container>
+							</md-input-container> -->
 
-							<md-button ng-click="HttpGet('loadmodel');">Load Test model
-						   </md-button>
+
 
 							<!-- <md-slider-container>
 								<span>Pitch </span>
@@ -153,7 +157,7 @@
 
 						<md-slider-container>
 						<span>X </span>
-						<md-slider ng-model="native.camera.position.x" min="-100" max="100"  ng-change="sendCamera()">
+						<md-slider ng-model="native.camera.position.x" min="-100" max="100" ng-change="sendCamera()" ng-update="saveConfigs()">
 						</md-slider>
 							<span class="value"> {{native.camera.position.x}}</span>
 					</md-slider-container>
@@ -199,12 +203,13 @@
 
 						<!--<md-button ng-click="scope.recenter()">Recenter View</md-button>-->
 						<md-button ng-click="resetCamera()">Reset Values</md-button>
+						<md-button ng-click="saveConfigs()">Save Values</md-button>
+
 					</md-tab-body>
 				</md-tab>
 
 				<md-tab label="Model"><md-tab-label><i class="icon">bug_report</i></md-tab-label>
 					<md-tab-body>
-						<md-button ng-click="HttpGet('open-dev-tools')">Open Dev Tools</md-button>
 
 					<div>
 						<ul class="capturer-list"></ul>
@@ -252,8 +257,12 @@
 						<span class="value">{{native.desktopWindow.rotation.z}}</span>
 					</md-slider-container>
 
+					<md-button ng-click="HttpGet('reset-window-pos');">Reset Position</md-button>
 
 					</md-tab-body>
+
+
+
 				</md-tab>
 
 

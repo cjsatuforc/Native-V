@@ -133,6 +133,7 @@ app.on('ready', function() {
     //ipcMain receive scope from Angular and send it back to mainview's ipcRenderer
     ipcMain.on('send-native', function(event, arg) {
             mainWindow.webContents.send('update-native', arg);
+            prefsWindow.webContents.send('update-native', arg);
     });
 
     ipcMain.on('send-model', function(event, arg) {
@@ -167,7 +168,6 @@ app.on('ready', function() {
 
     ipcMain.on('show-picker', (event, options) => {
        prefsWindow.webContents.send('get-sources', options)
-
     })
 
 
@@ -232,6 +232,25 @@ app.on('ready', function() {
         prefsWindow.openDevTools();
         res.send(null); // send Null back to end request
     });
+
+    api.get('/open-settings', function(req, res) {
+        prefsWindow.show();
+        res.send(null); // send Null back to end request
+    });
+
+
+    api.get('/open-preview', function(req, res) {
+        mainWindow.show();
+        res.send(null); // send Null back to end request
+    });
+
+    api.get('/reset-window-pos', function(req, res) {
+        prefsWindow.webContents.send('reset-window-pos');
+        mainWindow.webContents.send('reset-window-pos');
+        res.send(null); // send Null back to end request
+    });
+
+
 
     api.listen(3000, function () {
       console.log('Api is on port 3000!')

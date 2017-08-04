@@ -21,8 +21,16 @@ ipcRenderer.on('update-native', function(event, arg) {
         //recieve updated scope from ipcMain an
         ipcRenderer.on('update-native', function(event, arg) {
             $scope.native = arg;
+            console.log('Native scope updated');
             $scope.$apply();
         });
+
+
+        $scope.saveConfigs = function () {
+            localstorage.setItem('native', JSON.stringify(native));
+            console.log('localStorage updated;')
+        }
+
 
         //updatescope of mainWindow
         ipcRenderer.on('update-camera', function(event, arg) {
@@ -32,7 +40,21 @@ ipcRenderer.on('update-native', function(event, arg) {
         //updatescope of mainWindow
         ipcRenderer.on('update-window', function(event, arg) {
             $scope.native.desktopWindow = arg;
+            console.log('window updated;')
         });
+
+        ipcRenderer.on('reset-window-pos', function(event, arg) {
+            $scope.native.desktopWindow.position.x = 0;
+            $scope.native.desktopWindow.position.y = 0;
+            $scope.native.desktopWindow.position.z = 0;
+            $scope.native.desktopWindow.rotation.x = 0;
+            $scope.native.desktopWindow.rotation.y = 0;
+            $scope.native.desktopWindow.rotation.z = 0;
+            $scope.sendNative()
+            console.log('window pos reseted updated;');
+        });
+
+
 
         //sending scope to ipcMain
         $scope.sendNative = function () {
@@ -54,10 +76,9 @@ ipcRenderer.on('update-native', function(event, arg) {
             ipcRenderer.send('send-model', native.model);
         }
 
-        // $scope.resetCamera = function () {
-        //     console.log('NADO SDELAT')
-        //     ipcRenderer.send('send-camera', native.camera);
-        // }
+        $scope.resetCamera = function () {
+            HttpGet('reset-Camera');
+        }
 
         $scope.togglePreview = function(){
             ipcRenderer.send('toggle-preview', native.preview);
@@ -88,7 +109,6 @@ ipcRenderer.on('update-native', function(event, arg) {
         $scope.sendWindow();
     }
 })();
-
 
 
 function getFace(facos){
@@ -125,3 +145,26 @@ function getSmile(smileFactor){
 //         pointer.style.transform = 'translate3d('+ -transformX + 'px,' + transformY + 'px,0)';
 //     }
 // }
+
+
+(function() {
+	angular
+		.module('app')
+		.config(['$mdThemingProvider', configure]);
+	function configure($mdThemingProvider) {
+        // Configure a dark theme with primary foreground yellow
+        $mdThemingProvider
+            .theme('docs-dark', 'default')
+            .primaryPalette('yellow')
+            .dark()
+            .foregroundPalette['3'] = 'yellow';
+    }
+})();
+(function() {
+    angular
+        .module('app')
+        .config(['$mdAriaProvider', configureAria]);
+    function configureAria($mdAriaProvider) {
+        $mdAriaProvider.disableWarnings();
+    }
+})();

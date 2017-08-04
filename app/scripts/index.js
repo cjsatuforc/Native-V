@@ -50,8 +50,6 @@ const playVideo = () => {
   })
 }
 
-// ipcRenderer.send('show-picker', { types: ['screen'] })
-ipcRenderer.send('show-picker', { types: ['window'] })
 
 ipcRenderer.on('fusionConnected', (event, sourceId) => {
     ipcRenderer.send('show-picker', { types: ['window'] })
@@ -119,6 +117,10 @@ function boot() {
 var interval = setInterval(function() {
     if(document.readyState === 'complete') {
         clearInterval(interval);
+
+        // ipcRenderer.send('show-picker', { types: ['screen'] })
+        ipcRenderer.send('show-picker', { types: ['window'] })
+
         document.body.className = "loaded";
     }
 }, 100);
@@ -128,8 +130,6 @@ document.addEventListener('DOMContentLoaded', boot);
 
 
 var localstorage = window.localStorage;
-
-localStorage.clear(); ///TEMPORARY
 
 if (localstorage.native === undefined || localstorage.native === null || localstorage.native.length === 0){
     var native = native;
