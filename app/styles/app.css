@@ -378,3 +378,7 @@ header .md-button, footer .md-button{
 .md-ripple-container{
     direction: none !important;
 }
+
+md-button:active{
+
+}

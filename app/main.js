@@ -70,8 +70,8 @@ app.on('ready', function() {
     logger.debug("Starting application");
 
     var mainWindow = new BrowserWindow({
-        width: 750,
-        height: 400,
+        width: 970,
+        height: 560,
         toolbar: false,
         title: "Electron",
         transparent: true,
@@ -79,10 +79,11 @@ app.on('ready', function() {
         titleBarStyle: 'hidden-inset',
         vibrancy: 'dark',
         icon: path.join(__dirname, 'assets/icons/png/64x64.png'),
-        x: 1500,
-        y: 1000,
+        x: 600,
+        y: 200,
         show: true,
-        alwaysOnTop: true
+        alwaysOnTop: true,
+        radii: [5,5,5,5]
     });
 
     mainWindow.loadURL('file://' + __dirname + "/index.html");
@@ -102,8 +103,9 @@ app.on('ready', function() {
         titleBarStyle: 'hidden-inset',
         toolbar: false,
         x: 100,
-        y: 150,
-        vibrancy: 'dark'
+        y: 200,
+        vibrancy: 'dark',
+        radii: [5,5,5,5]
     })
 
 

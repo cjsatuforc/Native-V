@@ -152,7 +152,6 @@ function getSmile(smileFactor){
 		.module('app')
 		.config(['$mdThemingProvider', configure]);
 	function configure($mdThemingProvider) {
-        // Configure a dark theme with primary foreground yellow
         $mdThemingProvider
             .theme('docs-dark', 'default')
             .primaryPalette('yellow')
